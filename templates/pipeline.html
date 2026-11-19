@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Pipeline · HirePulse{% endblock %}
+
+{% block content %}
+<h1>Pipeline</h1>
+
+<div class="pipeline-board">
+  {% for stage in stages %}
+  <div class="stage-col">
+    <div class="stage-header">
+      <span>{{ stage }}</span>
+      <span class="badge badge-neutral">{{ grouped[stage] | length }}</span>
+    </div>
+    {% for card in grouped[stage] %}
+    <div class="pipe-card">
+      <a href="/candidates/{{ card.candidate_id }}">{{ card.candidate }}</a>
+      <div class="muted">{{ card.job_title }} · {{ card.company }}</div>
+      <div class="muted" style="margin-top:4px;">
+        Waiting {{ card.waiting_days }}d · {{ card.open_actions }} open task(s)
+      </div>
+      <select onchange="updateStage({{ card.application_id }}, this.value)">
+        {% for s in stages %}
+        <option value="{{ s }}" {{ 'selected' if s == stage }}>{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

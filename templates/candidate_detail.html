@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}{{ candidate.name }} · HirePulse{% endblock %}
+{% block content %}
+<h1>{{ candidate.name }}</h1>
+<p class="muted">{{ candidate.email }} · {{ candidate.experience }} yrs experience · {{ candidate.location }}</p>
+
+<div class="grid-2">
+  <div class="card">
+    <h2>Applications</h2>
+    {% for ap in applications %}
+    <div style="padding:10px 0;border-bottom:1px solid var(--border);">
+      <strong>{{ ap.job_title }}</strong> ({{ ap.company }})
+      <div class="muted">Recruiter: {{ ap.recruiter }} · Feedback: {{ ap.feedback_status }}</div>
+      <div style="margin-top:6px;">
+        Stage:
+        <select onchange="updateStage({{ ap.application_id }}, this.value)">
+          {% for s in stages %}
+          <option value="{{ s }}" {{ 'selected' if s == ap.stage }}>{{ s }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="card">
+    <h2>Actions</h2>
+    {% for a in actions %}
+    <div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <span class="badge badge-{{ a.priority }}">{{ a.priority }} {{ a.score }}</span>
+        <strong>{{ a.action_type }}</strong>
+        <div class="muted">Due {{ a.due_at }} · {{ a.status }}</div>
+      </div>
+      {% if a.status == 'Pending' %}
+      <div class="btn-row" style="margin:0;">
+        <button class="success" onclick="completeAction({{ a.action_id }})">Done</button>
+        <button onclick="snoozeAction({{ a.action_id }}, 1)">+1d</button>
+      </div>
+      {% endif %}
+    </div>
+    {% else %}
+    <p class="muted">No actions logged.</p>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="card">
+  <h2>Activity & Stage History</h2>
+  <table>
+    <thead><tr><th>Date</th><th>Event</th><th>Context</th></tr></thead>
+    <tbody>
+      {% for ev in activity %}
+      <tr><td>{{ ev.timestamp }}</td><td>{{ ev.title }}</td><td class="muted">{{ ev.detail }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · HirePulse{% endblock %}
+
+{% block content %}
+<h1>Dashboard</h1>
+
+<section class="kpi-grid">
+  <div class="card"><div class="kpi-label">Active Jobs</div><div class="kpi-val">{{ kpi.active_jobs }}</div></div>
+  <div class="card"><div class="kpi-label">Candidates</div><div class="kpi-val">{{ kpi.candidates }}</div></div>
+  <div class="card"><div class="kpi-label">Pending Actions</div><div class="kpi-val">{{ kpi.pending }}</div></div>
+  <div class="card"><div class="kpi-label">Overdue Actions</div><div class="kpi-val danger">{{ kpi.overdue }}</div></div>
+  <div class="card"><div class="kpi-label">In Interview</div><div class="kpi-val">{{ kpi.interviews }}</div></div>
+  <div class="card"><div class="kpi-label">Offers Out</div><div class="kpi-val">{{ kpi.offers }}</div></div>
+</section>
+
+<section class="priority-bar">
+  <a href="/queue?filter=high" class="priority-pill badge-High">
+    <span>High Priority</span><span>{{ by_priority.High }}</span>
+  </a>
+  <a href="/queue?filter=medium" class="priority-pill badge-Medium">
+    <span>Medium Priority</span><span>{{ by_priority.Medium }}</span>
+  </a>
+  <a href="/queue?filter=low" class="priority-pill badge-Low">
+    <span>Low Priority</span><span>{{ by_priority.Low }}</span>
+  </a>
+</section>
+
+<section class="grid-2">
+  <div class="card">
+    <h2>7-Day Action Activity</h2>
+    <canvas id="activityChart" height="140"></canvas>
+  </div>
+  <div class="card">
+    <h2>Pipeline by Stage</h2>
+    <canvas id="pipelineChart" height="140"></canvas>
+  </div>
+</section>
+
+<section class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+    <h2 style="margin:0;">Top 5 Attention Items</h2>
+    <a href="/queue" class="btn">Open Full Queue →</a>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Priority</th><th>Action</th><th>Candidate</th><th>Job</th><th>Due</th><th>Why this priority</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in top %}
+      <tr>
+        <td><span class="badge badge-{{ r.priority }}">{{ r.priority }} ({{ r.score }})</span></td>
+        <td>{{ r.action_type }}</td>
+        <td><a href="/candidates/{{ r.candidate_id }}">{{ r.candidate }}</a></td>
+        <td>{{ r.job_title }}</td>
+        <td>{{ r.due_at }}</td>
+        <td class="muted">{{ r.reasons_text }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const actData = {{ activity_7d | tojson }};
+  new Chart(document.getElementById("activityChart"), {
+    type: "bar",
+    data: {
+      labels: actData.labels,
+      datasets: [
+        { label: "Created", data: actData.created, backgroundColor: "#9fb3c8" },
+        { label: "Completed", data: actData.completed, backgroundColor: "#1f4e79" }
+      ]
+    },
+    options: { responsive: true, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+  });
+
+  new Chart(document.getElementById("pipelineChart"), {
+    type: "bar",
+    data: {
+      labels: {{ stages | tojson }},
+      datasets: [{
+        label: "Applications",
+        data: {{ stage_counts | tojson }},
+        backgroundColor: "#336699"
+      }]
+    },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+  });
+</script>
+{% endblock %}

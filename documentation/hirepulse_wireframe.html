@@ -1,0 +1,2071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HirePulse [Phase 2 Wireframe] — Recruitment Workflow Prototype</title>
+  <!-- Load Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Load Inter & JetBrains Mono for crisp wireframe typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <!-- Apply saved or system theme before first paint to prevent flash -->
+  <script>
+    (function () {
+      try {
+        const saved = localStorage.getItem('hirepulse_theme');
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'dark' || (!saved && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    html.dark {
+      color-scheme: dark;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col transition-colors duration-150">
+
+  <!-- ===================================================================== -->
+  <!-- TOP NAVIGATION & PROTOTYPE BAR                                        -->
+  <!-- ===================================================================== -->
+  <header class="bg-white dark:bg-slate-900 border-b border-slate-300 dark:border-slate-700 sticky top-0 z-30 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-3">
+      <!-- Left: Product Name & Wireframe Badge -->
+      <div class="flex items-center gap-2.5">
+        <button
+          id="brandHomeBtn"
+          type="button"
+          class="flex items-center gap-2 text-left focus:outline-none group"
+          title="Go to Dashboard"
+        >
+          <span class="w-7 h-7 border border-slate-800 dark:border-slate-200 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-mono text-xs font-semibold flex items-center justify-center rounded">
+            HP
+          </span>
+          <span class="font-semibold text-sm sm:text-base tracking-tight text-slate-900 dark:text-slate-100 group-hover:underline">
+            HirePulse
+          </span>
+        </button>
+        <span class="font-mono text-[11px] uppercase tracking-wider px-2 py-0.5 border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded">
+          [Phase 2 Wireframe]
+        </span>
+      </div>
+
+      <!-- Center: 4-Screen Prototype Tabs -->
+      <nav aria-label="Primary Wireframe Screens" class="flex items-center gap-1 overflow-x-auto max-w-full py-0.5">
+        <button
+          type="button"
+          data-screen-tab="dashboard"
+          class="screen-tab px-3 py-1.5 text-xs sm:text-sm font-medium rounded border transition-colors whitespace-nowrap"
+        >
+          1. Dashboard
+        </button>
+        <button
+          type="button"
+          data-screen-tab="queue"
+          class="screen-tab px-3 py-1.5 text-xs sm:text-sm font-medium rounded border transition-colors whitespace-nowrap"
+        >
+          2. Action Queue
+        </button>
+        <button
+          type="button"
+          data-screen-tab="pipeline"
+          class="screen-tab px-3 py-1.5 text-xs sm:text-sm font-medium rounded border transition-colors whitespace-nowrap"
+        >
+          3. Pipeline
+        </button>
+        <button
+          type="button"
+          data-screen-tab="candidate"
+          class="screen-tab px-3 py-1.5 text-xs sm:text-sm font-medium rounded border transition-colors whitespace-nowrap"
+        >
+          4. Candidate Detail
+        </button>
+      </nav>
+
+      <!-- Right: Core Flow Hint + Theme Toggle -->
+      <div class="flex items-center gap-2">
+        <button
+          id="coreFlowBtn"
+          type="button"
+          class="font-mono text-[11px] px-2.5 py-1.5 border border-dashed border-slate-400 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded transition-colors"
+          title="Click to start the core user journey from Dashboard"
+        >
+          Core Flow: Dashboard &rarr; Queue &rarr; Candidate
+        </button>
+        <button
+          id="themeToggleBtn"
+          type="button"
+          class="font-mono text-[11px] px-2.5 py-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 rounded transition-colors"
+          title="Toggle light/dark theme"
+          aria-label="Toggle dark theme"
+        >
+          Theme: Light
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================================================================== -->
+  <!-- MAIN WORKSPACE CONTAINER (RENDERS ACTIVE SCREEN)                      -->
+  <!-- ===================================================================== -->
+  <main id="appMain" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
+    <!-- Screen content dynamically rendered by JavaScript -->
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- WIREFRAME FOOTER (SCOPE REMINDER)                                     -->
+  <!-- ===================================================================== -->
+  <footer class="border-t border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 mt-auto transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-400 font-mono">
+      <span>WIREFRAME MODE // 4 SCREENS ONLY // SHARED LIVE STATE</span>
+      <span>NO AI &bull; NO CANDIDATE SCORING &bull; DETERMINISTIC WORKFLOW</span>
+    </div>
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- INLINE WIREFRAME MODAL: CREATE NEW TASK                               -->
+  <!-- ===================================================================== -->
+  <div
+    id="newTaskModal"
+    class="fixed inset-0 z-40 hidden bg-slate-900/40 dark:bg-black/70 flex items-center justify-center p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="newTaskModalTitle"
+  >
+    <div class="bg-white dark:bg-slate-900 border border-slate-400 dark:border-slate-600 rounded w-full max-w-md shadow-sm">
+      <div class="px-4 py-3 border-b border-slate-300 dark:border-slate-700 flex items-center justify-between bg-slate-50 dark:bg-slate-800/80 rounded-t">
+        <h2 id="newTaskModalTitle" class="font-mono text-xs uppercase tracking-wider font-semibold text-slate-800 dark:text-slate-100">
+          + New Follow-Up Task
+        </h2>
+        <button
+          id="closeNewTaskModalBtn"
+          type="button"
+          class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 font-mono text-sm px-2 py-0.5 border border-transparent hover:border-slate-300 dark:hover:border-slate-600 rounded"
+          aria-label="Close modal"
+        >
+          [X]
+        </button>
+      </div>
+
+      <form id="newTaskForm" class="p-4 space-y-4" novalidate>
+        <div>
+          <label for="modalTaskTitle" class="block font-mono text-[11px] uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">
+            Task Title *
+          </label>
+          <input
+            id="modalTaskTitle"
+            type="text"
+            placeholder="e.g., Send technical panel feedback"
+            class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-700 rounded focus:outline-none focus:border-slate-800 dark:focus:border-slate-300 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500"
+          />
+          <p id="modalTaskTitleError" class="hidden text-xs text-red-700 dark:text-red-400 font-mono mt-1">
+            Required: Enter a clear follow-up action.
+          </p>
+        </div>
+
+        <div>
+          <label for="modalTaskCandidate" class="block font-mono text-[11px] uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">
+            Candidate *
+          </label>
+          <select
+            id="modalTaskCandidate"
+            class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-700 rounded focus:outline-none focus:border-slate-800 dark:focus:border-slate-300 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100"
+          >
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label for="modalTaskDueDate" class="block font-mono text-[11px] uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">
+              Due Date *
+            </label>
+            <input
+              id="modalTaskDueDate"
+              type="date"
+              class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-700 rounded focus:outline-none focus:border-slate-800 dark:focus:border-slate-300 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-mono"
+            />
+            <p id="modalTaskDueError" class="hidden text-xs text-red-700 dark:text-red-400 font-mono mt-1">
+              Required: Select a due date.
+            </p>
+          </div>
+
+          <div>
+            <label for="modalTaskType" class="block font-mono text-[11px] uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">
+              Action Type
+            </label>
+            <select
+              id="modalTaskType"
+              class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-700 rounded focus:outline-none focus:border-slate-800 dark:focus:border-slate-300 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100"
+            >
+              <option value="Follow-up Call">Follow-up Call</option>
+              <option value="Send Feedback">Send Feedback</option>
+              <option value="Interview Prep">Interview Prep</option>
+              <option value="Client Check-in">Client Check-in</option>
+              <option value="Offer Review">Offer Review</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label for="modalTaskNotes" class="block font-mono text-[11px] uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">
+            Notes (Optional)
+          </label>
+          <textarea
+            id="modalTaskNotes"
+            rows="2"
+            placeholder="Context for this follow-up..."
+            class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-700 rounded focus:outline-none focus:border-slate-800 dark:focus:border-slate-300 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500"
+          ></textarea>
+        </div>
+
+        <div class="pt-2 border-t border-slate-200 dark:border-slate-700 flex items-center justify-end gap-2">
+          <button
+            id="cancelNewTaskBtn"
+            type="button"
+            class="px-3 py-2 text-xs font-mono border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="px-4 py-2 text-xs font-mono font-semibold border border-slate-900 dark:border-slate-100 bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-slate-900 rounded"
+          >
+            Save Task
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- NON-BLOCKING TOAST NOTIFICATION (REPLACES ALERT/CONFIRM)              -->
+  <!-- ===================================================================== -->
+  <div
+    id="toastContainer"
+    class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm pointer-events-none"
+    aria-live="polite"
+  ></div>
+
+  <!-- ===================================================================== -->
+  <!-- APPLICATION STATE, SEED DATA & WIREFRAME RENDERER                     -->
+  <!-- ===================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* -------------------------------------------------------------------
+       * 0. THEME MANAGEMENT (LIGHT / DARK)
+       * ------------------------------------------------------------------- */
+      function isDarkMode() {
+        return document.documentElement.classList.contains('dark');
+      }
+
+      function updateThemeToggleLabel() {
+        const btn = document.getElementById('themeToggleBtn');
+        if (!btn) return;
+        btn.textContent = isDarkMode() ? 'Theme: Dark' : 'Theme: Light';
+        btn.setAttribute('aria-pressed', String(isDarkMode()));
+      }
+
+      function toggleTheme() {
+        const nextDark = !isDarkMode();
+        document.documentElement.classList.toggle('dark', nextDark);
+        try {
+          localStorage.setItem('hirepulse_theme', nextDark ? 'dark' : 'light');
+        } catch (e) {}
+        updateThemeToggleLabel();
+        showToast(`Switched to ${nextDark ? 'Dark' : 'Light'} wireframe theme.`);
+      }
+
+      /* -------------------------------------------------------------------
+       * 1. DATE UTILITIES (Anchored to Local Today for Consistent Testing)
+       * ------------------------------------------------------------------- */
+      function getTodayISO() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      }
+
+      function addDaysISO(baseISO, days) {
+        const [y, m, d] = baseISO.split('-').map(Number);
+        const dt = new Date(y, m - 1, d);
+        dt.setDate(dt.getDate() + days);
+        const ny = dt.getFullYear();
+        const nm = String(dt.getMonth() + 1).padStart(2, '0');
+        const nd = String(dt.getDate()).padStart(2, '0');
+        return `${ny}-${nm}-${nd}`;
+      }
+
+      function getNextMondayISO(baseISO) {
+        const [y, m, d] = baseISO.split('-').map(Number);
+        const dt = new Date(y, m - 1, d);
+        const dayOfWeek = dt.getDay(); // 0=Sun, 1=Mon, ...
+        const daysUntilMonday = dayOfWeek === 1 ? 7 : (8 - dayOfWeek) % 7 || 7;
+        dt.setDate(dt.getDate() + daysUntilMonday);
+        const ny = dt.getFullYear();
+        const nm = String(dt.getMonth() + 1).padStart(2, '0');
+        const nd = String(dt.getDate()).padStart(2, '0');
+        return `${ny}-${nm}-${nd}`;
+      }
+
+      function diffDays(dateA, dateB) {
+        const [ya, ma, da] = dateA.split('-').map(Number);
+        const [yb, mb, db] = dateB.split('-').map(Number);
+        const a = Date.UTC(ya, ma - 1, da);
+        const b = Date.UTC(yb, mb - 1, db);
+        return Math.round((a - b) / (1000 * 60 * 60 * 24));
+      }
+
+      function formatShortDate(iso) {
+        if (!iso) return '—';
+        const today = getTodayISO();
+        const delta = diffDays(iso, today);
+        if (delta === 0) return 'Today';
+        if (delta === -1) return 'Yesterday';
+        if (delta === 1) return 'Tomorrow';
+        const [y, m, d] = iso.split('-').map(Number);
+        const dt = new Date(y, m - 1, d);
+        return dt.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+      }
+
+      function formatNowTimestamp() {
+        const now = new Date();
+        return now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) + ' · Today';
+      }
+
+      function formatDuration(seconds) {
+        const s = Math.max(1, Math.round(seconds));
+        const mins = Math.floor(s / 60);
+        const rem = s % 60;
+        if (mins === 0) return `${rem}s`;
+        return `${mins}m ${String(rem).padStart(2, '0')}s`;
+      }
+
+      function escapeHTML(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      /* -------------------------------------------------------------------
+       * 2. CONSTANTS & SHARED LIVE APPLICATION STATE
+       * ------------------------------------------------------------------- */
+      const STAGES = ['Applied', 'Screening', 'Interview', 'Offer', 'Hired'];
+      const TODAY = getTodayISO();
+
+      const state = {
+        activeScreen: 'dashboard', // 'dashboard' | 'queue' | 'pipeline' | 'candidate'
+        queueFilter: 'all_open',   // 'all_open' | 'overdue' | 'due_today' | 'snoozed' | 'completed'
+        selectedTaskId: 't-101',
+        selectedCandidateId: 'c-1',
+        candidateOrigin: 'queue',  // 'dashboard' | 'queue' | 'pipeline'
+        queueEnteredAt: null,      // Timestamp for Time-to-Identify-Next-Action tracking
+        queueActionLoggedForVisit: false,
+        // Seed baseline sessions (seconds) averaging ~1m 42s (102s)
+        identificationTimesSec: [118, 94, 106, 90],
+
+        candidates: [
+          {
+            id: 'c-1',
+            name: 'Priya Sharma',
+            role: 'Senior Backend Engineer',
+            email: 'priya.sharma@example.com',
+            phone: '+91 98201 44120',
+            stage: 'Interview',
+            client: 'FinStack Labs',
+            activity: [
+              { id: 'a-1', text: 'Moved stage: Screening → Interview', time: '2 days ago', type: 'stage' },
+              { id: 'a-2', text: 'Completed task: Share system design brief', time: '3 days ago', type: 'task' }
+            ]
+          },
+          {
+            id: 'c-2',
+            name: 'Arjun Mehta',
+            role: 'Product Designer',
+            email: 'arjun.mehta@example.com',
+            phone: '+91 98112 77304',
+            stage: 'Screening',
+            client: 'CloudGrid Systems',
+            activity: [
+              { id: 'a-3', text: 'Moved stage: Applied → Screening', time: '4 days ago', type: 'stage' },
+              { id: 'a-4', text: 'Snoozed task "Portfolio walkthrough check-in" (2x)', time: 'Yesterday', type: 'snooze' }
+            ]
+          },
+          {
+            id: 'c-3',
+            name: 'Kavya Nair',
+            role: 'Frontend Engineer',
+            email: 'kavya.nair@example.com',
+            phone: '+91 97400 88219',
+            stage: 'Offer',
+            client: 'FinStack Labs',
+            activity: [
+              { id: 'a-5', text: 'Moved stage: Interview → Offer', time: 'Yesterday', type: 'stage' },
+              { id: 'a-6', text: 'Completed task: Final panel debrief with hiring manager', time: 'Yesterday', type: 'task' }
+            ]
+          },
+          {
+            id: 'c-4',
+            name: 'Rohan Verma',
+            role: 'DevOps Engineer',
+            email: 'rohan.verma@example.com',
+            phone: '+91 99001 51290',
+            stage: 'Applied',
+            client: 'InfraCore Tech',
+            activity: [
+              { id: 'a-7', text: 'Candidate added to pipeline (Applied)', time: '3 days ago', type: 'stage' }
+            ]
+          },
+          {
+            id: 'c-5',
+            name: 'Ananya Iyer',
+            role: 'Data Analyst',
+            email: 'ananya.iyer@example.com',
+            phone: '+91 98450 66231',
+            stage: 'Interview',
+            client: 'MetricFlow Analytics',
+            activity: [
+              { id: 'a-8', text: 'Moved stage: Screening → Interview', time: '2 days ago', type: 'stage' }
+            ]
+          },
+          {
+            id: 'c-6',
+            name: 'Vikram Singh',
+            role: 'Engineering Manager',
+            email: 'vikram.singh@example.com',
+            phone: '+91 98190 33118',
+            stage: 'Hired',
+            client: 'CloudGrid Systems',
+            activity: [
+              { id: 'a-9', text: 'Moved stage: Offer → Hired', time: '1 day ago', type: 'stage' },
+              { id: 'a-10', text: 'Completed task: Confirm signed offer & start date', time: '1 day ago', type: 'task' }
+            ]
+          }
+        ],
+
+        tasks: [
+          {
+            id: 't-101',
+            title: 'Send hiring manager feedback after Round 2',
+            candidateId: 'c-1',
+            type: 'Send Feedback',
+            dueDate: addDaysISO(TODAY, -2),
+            originalDueDate: addDaysISO(TODAY, -2),
+            status: 'open', // 'open' | 'completed'
+            snoozeCount: 0,
+            completedAt: null,
+            notes: 'Hiring manager asked to confirm distributed systems depth and notice period flexibility before scheduling Round 3.'
+          },
+          {
+            id: 't-102',
+            title: 'Call candidate to review offer breakdown & equity',
+            candidateId: 'c-3',
+            type: 'Offer Review',
+            dueDate: addDaysISO(TODAY, -1),
+            originalDueDate: addDaysISO(TODAY, -1),
+            status: 'open',
+            snoozeCount: 1,
+            completedAt: null,
+            notes: 'Kavya has a competing offer deadline on Friday. Walk through base + ESOP schedule today.'
+          },
+          {
+            id: 't-103',
+            title: 'Prep candidate for SQL & case study panel',
+            candidateId: 'c-5',
+            type: 'Interview Prep',
+            dueDate: TODAY,
+            originalDueDate: TODAY,
+            status: 'open',
+            snoozeCount: 0,
+            completedAt: null,
+            notes: 'Share interviewer LinkedIn profiles and remind her to keep business-impact metrics concise.'
+          },
+          {
+            id: 't-104',
+            title: 'Initial screening call — Kubernetes & Terraform fit',
+            candidateId: 'c-4',
+            type: 'Follow-up Call',
+            dueDate: TODAY,
+            originalDueDate: TODAY,
+            status: 'open',
+            snoozeCount: 0,
+            completedAt: null,
+            notes: 'Verify AWS multi-region experience and current CTC expectations.'
+          },
+          {
+            id: 't-105',
+            title: 'Portfolio walkthrough check-in with design lead',
+            candidateId: 'c-2',
+            type: 'Client Check-in',
+            dueDate: addDaysISO(TODAY, 2),
+            originalDueDate: addDaysISO(TODAY, -1),
+            status: 'open',
+            snoozeCount: 3,
+            completedAt: null,
+            notes: 'Design lead rescheduled twice; confirm whether Arjun moves to live whiteboarding.'
+          },
+          {
+            id: 't-106',
+            title: 'Confirm reference check contacts for final offer',
+            candidateId: 'c-3',
+            type: 'Follow-up Call',
+            dueDate: addDaysISO(TODAY, 3),
+            originalDueDate: addDaysISO(TODAY, 3),
+            status: 'open',
+            snoozeCount: 0,
+            completedAt: null,
+            notes: 'Need two former engineering managers before background verification starts.'
+          },
+          {
+            id: 't-107',
+            title: 'Follow up on take-home architecture notes',
+            candidateId: 'c-1',
+            type: 'Client Check-in',
+            dueDate: addDaysISO(TODAY, 1),
+            originalDueDate: TODAY,
+            status: 'open',
+            snoozeCount: 1,
+            completedAt: null,
+            notes: 'Snoozed +1 day while panel completes scorecard.'
+          },
+          {
+            id: 't-108',
+            title: 'Share system design brief with candidate',
+            candidateId: 'c-1',
+            type: 'Interview Prep',
+            dueDate: addDaysISO(TODAY, -3),
+            originalDueDate: addDaysISO(TODAY, -3),
+            status: 'completed',
+            snoozeCount: 0,
+            completedAt: addDaysISO(TODAY, -3), // On time
+            notes: 'Sent calendar invite and architecture prompt.'
+          },
+          {
+            id: 't-109',
+            title: 'Final panel debrief with hiring manager',
+            candidateId: 'c-3',
+            type: 'Client Check-in',
+            dueDate: addDaysISO(TODAY, -1),
+            originalDueDate: addDaysISO(TODAY, -2),
+            status: 'completed',
+            snoozeCount: 1,
+            completedAt: addDaysISO(TODAY, -1), // Completed late vs originalDueDate
+            notes: 'Unanimous hire decision; moved to Offer stage.'
+          },
+          {
+            id: 't-110',
+            title: 'Confirm signed offer & start date',
+            candidateId: 'c-6',
+            type: 'Offer Review',
+            dueDate: addDaysISO(TODAY, -1),
+            originalDueDate: addDaysISO(TODAY, -1),
+            status: 'completed',
+            snoozeCount: 0,
+            completedAt: addDaysISO(TODAY, -1), // On time
+            notes: 'Offer signed! Onboarding begins next month.'
+          }
+        ]
+      };
+
+      /* -------------------------------------------------------------------
+       * 3. DERIVED SELECTORS & METRIC CALCULATIONS
+       * ------------------------------------------------------------------- */
+      function getCandidateById(id) {
+        return state.candidates.find((c) => c.id === id) || null;
+      }
+
+      function isTaskOverdue(task) {
+        return task.status === 'open' && diffDays(task.dueDate, TODAY) < 0;
+      }
+
+      function isTaskDueToday(task) {
+        return task.status === 'open' && diffDays(task.dueDate, TODAY) === 0;
+      }
+
+      function isTaskSnoozed(task) {
+        return task.status === 'open' && task.snoozeCount > 0;
+      }
+
+      function sortTasksByUrgency(list) {
+        return [...list].sort((a, b) => {
+          if (a.status !== b.status) return a.status === 'open' ? -1 : 1;
+          return diffDays(a.dueDate, b.dueDate);
+        });
+      }
+
+      function getFilteredQueueTasks(filterKey) {
+        const all = state.tasks;
+        let result = [];
+        switch (filterKey) {
+          case 'overdue':
+            result = all.filter(isTaskOverdue);
+            break;
+          case 'due_today':
+            result = all.filter(isTaskDueToday);
+            break;
+          case 'snoozed':
+            result = all.filter(isTaskSnoozed);
+            break;
+          case 'completed':
+            result = all.filter((t) => t.status === 'completed');
+            break;
+          case 'all_open':
+          default:
+            result = all.filter((t) => t.status === 'open');
+            break;
+        }
+        return sortTasksByUrgency(result);
+      }
+
+      function computeMetrics() {
+        const openTasks = state.tasks.filter((t) => t.status === 'open');
+        const overdueTasks = openTasks.filter(isTaskOverdue);
+        const dueTodayTasks = openTasks.filter(isTaskDueToday);
+        const snoozedTasks = openTasks.filter(isTaskSnoozed);
+        const completedTasks = state.tasks.filter((t) => t.status === 'completed');
+
+        const overdueRate =
+          openTasks.length === 0
+            ? 0
+            : Math.round((overdueTasks.length / openTasks.length) * 100);
+
+        const onTimeCompleted = completedTasks.filter(
+          (t) => t.completedAt && diffDays(t.completedAt, t.originalDueDate) <= 0
+        );
+        const onTimeRate =
+          completedTasks.length === 0
+            ? null
+            : Math.round((onTimeCompleted.length / completedTasks.length) * 100);
+
+        const avgSec =
+          state.identificationTimesSec.reduce((acc, v) => acc + v, 0) /
+          Math.max(1, state.identificationTimesSec.length);
+
+        return {
+          avgTimeFormatted: formatDuration(avgSec),
+          avgSec: Math.round(avgSec),
+          overdueRate,
+          overdueCount: overdueTasks.length,
+          openCount: openTasks.length,
+          dueTodayCount: dueTodayTasks.length,
+          snoozedCount: snoozedTasks.length,
+          completedCount: completedTasks.length,
+          onTimeRate,
+          onTimeCount: onTimeCompleted.length
+        };
+      }
+
+      function recordQueueIdentificationIfNeeded() {
+        if (state.activeScreen === 'queue' && state.queueEnteredAt && !state.queueActionLoggedForVisit) {
+          const elapsedSec = Math.max(2, Math.min(300, Math.round((Date.now() - state.queueEnteredAt) / 1000)));
+          state.identificationTimesSec.push(elapsedSec);
+          state.queueActionLoggedForVisit = true;
+        }
+      }
+
+      /* -------------------------------------------------------------------
+       * 4. TOAST FEEDBACK (NO ALERT / CONFIRM)
+       * ------------------------------------------------------------------- */
+      function showToast(message) {
+        const container = document.getElementById('toastContainer');
+        if (!container) return;
+        const el = document.createElement('div');
+        el.className =
+          'pointer-events-auto bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 border border-slate-700 dark:border-slate-300 px-3.5 py-2.5 rounded shadow-sm font-mono text-xs flex items-center justify-between gap-3';
+        el.innerHTML = `<span>${escapeHTML(message)}</span>`;
+        container.appendChild(el);
+        setTimeout(() => {
+          el.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+          setTimeout(() => el.remove(), 320);
+        }, 2800);
+      }
+
+      /* -------------------------------------------------------------------
+       * 5. STATE MUTATION ACTIONS (SHARED ACROSS ALL 4 SCREENS)
+       * ------------------------------------------------------------------- */
+      function navigateTo(screen, options = {}) {
+        const prevScreen = state.activeScreen;
+        state.activeScreen = screen;
+
+        if (screen === 'queue') {
+          state.queueEnteredAt = Date.now();
+          state.queueActionLoggedForVisit = false;
+          if (options.filter) {
+            state.queueFilter = options.filter;
+          }
+          if (options.taskId) {
+            state.selectedTaskId = options.taskId;
+          } else {
+            const list = getFilteredQueueTasks(state.queueFilter);
+            if (!list.some((t) => t.id === state.selectedTaskId)) {
+              state.selectedTaskId = list.length ? list[0].id : null;
+            }
+          }
+        }
+
+        if (screen === 'candidate') {
+          if (options.candidateId) {
+            state.selectedCandidateId = options.candidateId;
+          }
+          if (options.origin) {
+            state.candidateOrigin = options.origin;
+          } else if (prevScreen !== 'candidate') {
+            state.candidateOrigin = prevScreen;
+          }
+        }
+
+        render();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function appendActivity(candidateId, text, type = 'task') {
+        const cand = getCandidateById(candidateId);
+        if (!cand) return;
+        cand.activity.unshift({
+          id: 'a-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+          text,
+          time: formatNowTimestamp(),
+          type
+        });
+      }
+
+      function completeTask(taskId) {
+        recordQueueIdentificationIfNeeded();
+        const task = state.tasks.find((t) => t.id === taskId);
+        if (!task || task.status === 'completed') return;
+
+        // Determine next task in current queue before mutating
+        const currentList = getFilteredQueueTasks(state.queueFilter);
+        const currentIndex = currentList.findIndex((t) => t.id === taskId);
+
+        task.status = 'completed';
+        task.completedAt = TODAY;
+
+        const onTime = diffDays(task.completedAt, task.originalDueDate) <= 0;
+        appendActivity(
+          task.candidateId,
+          `Completed task: "${task.title}" (${onTime ? 'On time' : 'Past original due date'})`,
+          'task'
+        );
+
+        // Advance selection smoothly if on Action Queue
+        if (state.activeScreen === 'queue') {
+          const nextList = getFilteredQueueTasks(state.queueFilter);
+          if (nextList.length > 0) {
+            const nextIdx = Math.min(currentIndex, nextList.length - 1);
+            state.selectedTaskId = nextList[Math.max(0, nextIdx)].id;
+          } else {
+            state.selectedTaskId = null;
+          }
+        }
+
+        showToast(`Task completed (${onTime ? 'On-time' : 'Late'}) — Metrics updated.`);
+        render();
+      }
+
+      function reopenTask(taskId) {
+        const task = state.tasks.find((t) => t.id === taskId);
+        if (!task || task.status === 'open') return;
+        task.status = 'open';
+        task.completedAt = null;
+        appendActivity(task.candidateId, `Reopened task: "${task.title}"`, 'task');
+        showToast('Task reopened and returned to Action Queue.');
+        render();
+      }
+
+      function snoozeTask(taskId, mode) {
+        recordQueueIdentificationIfNeeded();
+        const task = state.tasks.find((t) => t.id === taskId);
+        if (!task || task.status !== 'open') return;
+
+        const base = diffDays(task.dueDate, TODAY) < 0 ? TODAY : task.dueDate;
+        let newDue = TODAY;
+        let label = '';
+
+        if (mode === '+1d') {
+          newDue = addDaysISO(base, 1);
+          label = '+1 Day';
+        } else if (mode === '+3d') {
+          newDue = addDaysISO(base, 3);
+          label = '+3 Days';
+        } else if (mode === 'next_mon') {
+          newDue = getNextMondayISO(TODAY);
+          label = 'Next Monday';
+        }
+
+        task.dueDate = newDue;
+        task.snoozeCount += 1;
+
+        appendActivity(
+          task.candidateId,
+          `Snoozed task "${task.title}" (${label} → ${formatShortDate(newDue)}, snooze #${task.snoozeCount})`,
+          'snooze'
+        );
+
+        // If current filter no longer contains this task, pick next available
+        if (state.activeScreen === 'queue') {
+          const updatedList = getFilteredQueueTasks(state.queueFilter);
+          if (!updatedList.some((t) => t.id === taskId)) {
+            state.selectedTaskId = updatedList.length ? updatedList[0].id : null;
+          }
+        }
+
+        showToast(`Snoozed ${label} (${formatShortDate(newDue)}). Original due date preserved.`);
+        render();
+      }
+
+      function changeCandidateStage(candidateId, newStage) {
+        recordQueueIdentificationIfNeeded();
+        const cand = getCandidateById(candidateId);
+        if (!cand || cand.stage === newStage || !STAGES.includes(newStage)) return;
+
+        const oldStage = cand.stage;
+        cand.stage = newStage;
+        appendActivity(cand.id, `Moved stage: ${oldStage} → ${newStage}`, 'stage');
+        showToast(`${cand.name} moved to ${newStage}.`);
+        render();
+      }
+
+      function createTask({ title, candidateId, dueDate, type, notes }) {
+        const newTask = {
+          id: 't-' + Date.now(),
+          title: title.trim(),
+          candidateId,
+          type: type || 'Follow-up Call',
+          dueDate,
+          originalDueDate: dueDate,
+          status: 'open',
+          snoozeCount: 0,
+          completedAt: null,
+          notes: (notes || '').trim()
+        };
+
+        state.tasks.unshift(newTask);
+        appendActivity(
+          candidateId,
+          `Created task: "${newTask.title}" (Due ${formatShortDate(dueDate)})`,
+          'task'
+        );
+
+        if (state.activeScreen === 'queue') {
+          state.queueFilter = 'all_open';
+          state.selectedTaskId = newTask.id;
+        }
+
+        showToast('New follow-up task added to queue.');
+        render();
+      }
+
+      /* -------------------------------------------------------------------
+       * 6. WIREFRAME UI BADGE HELPERS
+       * ------------------------------------------------------------------- */
+      function renderDueBadge(task) {
+        if (task.status === 'completed') {
+          return `<span class="font-mono text-[11px] px-1.5 py-0.5 border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded">DONE ${escapeHTML(formatShortDate(task.completedAt))}</span>`;
+        }
+        const delta = diffDays(task.dueDate, TODAY);
+        if (delta < 0) {
+          const lateDays = Math.abs(delta);
+          return `<span class="font-mono text-[11px] px-1.5 py-0.5 border border-red-300 dark:border-red-800 bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300 rounded font-medium">OVERDUE ${lateDays}d</span>`;
+        }
+        if (delta === 0) {
+          return `<span class="font-mono text-[11px] px-1.5 py-0.5 border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 rounded font-medium">DUE TODAY</span>`;
+        }
+        return `<span class="font-mono text-[11px] px-1.5 py-0.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 rounded">DUE ${escapeHTML(formatShortDate(task.dueDate))}</span>`;
+      }
+
+      function renderStageBadge(stage) {
+        return `<span class="font-mono text-[11px] px-1.5 py-0.5 border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded">${escapeHTML(stage)}</span>`;
+      }
+
+      /* -------------------------------------------------------------------
+       * 7. SCREEN 1: DASHBOARD
+       * ------------------------------------------------------------------- */
+      function renderDashboardScreen() {
+        const m = computeMetrics();
+        const topUrgent = sortTasksByUrgency(state.tasks.filter((t) => t.status === 'open')).slice(0, 3);
+
+        return `
+          <section class="space-y-6">
+            <!-- Wireframe Screen Header -->
+            <div class="flex flex-wrap items-end justify-between gap-3 border-b border-slate-300 dark:border-slate-700 pb-4">
+              <div>
+                <p class="font-mono text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Screen 01 / Overview</p>
+                <h1 class="text-xl font-semibold text-slate-900 dark:text-slate-100 mt-0.5">Recruiter Execution Dashboard</h1>
+              </div>
+              <div class="flex items-center gap-2">
+                <button
+                  type="button"
+                  data-action="open-new-task"
+                  class="px-3 py-2 text-xs font-mono border border-slate-900 dark:border-slate-100 bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-slate-900 rounded"
+                >
+                  + New Task
+                </button>
+                <button
+                  type="button"
+                  data-jump-queue="all_open"
+                  class="px-3 py-2 text-xs font-mono border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 rounded"
+                >
+                  Open Full Queue &rarr;
+                </button>
+              </div>
+            </div>
+
+            <!-- 3 Core Execution Metrics -->
+            <div>
+              <h2 class="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3">
+                Core Execution Metrics (Live State)
+              </h2>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Metric 1 -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded p-4 flex flex-col justify-between">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="font-mono text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                      Avg Time to Identify Next Action
+                    </span>
+                    <span class="font-mono text-[11px] px-1.5 py-0.5 border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded">
+                      Target &lt; 2m
+                    </span>
+                  </div>
+                  <div class="mt-3 flex items-baseline justify-between">
+                    <span class="text-3xl font-semibold font-mono text-slate-900 dark:text-slate-100">${escapeHTML(m.avgTimeFormatted)}</span>
+                    <span class="text-xs text-slate-500 dark:text-slate-400 font-mono">${state.identificationTimesSec.length} sessions</span>
+                  </div>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">
+                    Measures elapsed time from opening Action Queue to taking first action.
+                  </p>
+                </div>
+
+                <!-- Metric 2 -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded p-4 flex flex-col justify-between">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="font-mono text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                      Overdue Action Rate
+                    </span>
+                    <span class="font-mono text-[11px] px-1.5 py-0.5 border ${m.overdueRate > 15 ? 'border-red-300 dark:border-red-800 bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300' : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300'} rounded">
+                      Target &lt; 15%
+                    </span>
+                  </div>
+                  <div class="mt-3 flex items-baseline justify-between">
+                    <span class="text-3xl font-semibold font-mono ${m.overdueRate > 15 ? 'text-red-700 dark:text-red-400' : 'text-slate-900 dark:text-slate-100'}">${m.overdueRate}%</span>
+                    <span class="text-xs text-slate-500 dark:text-slate-400 font-mono">${m.overdueCount} / ${m.openCount} open</span>
+                  </div>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">
+                    Percentage of open follow-ups currently past their active due date.
+                  </p>
+                </div>
+
+                <!-- Metric 3 -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded p-4 flex flex-col justify-between">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="font-mono text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                      On-Time Task Completion
+                    </span>
+                    <span class="font-mono text-[11px] px-1.5 py-0.5 border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded">
+                      Target &ge; 80%
+                    </span>
+                  </div>
+                  <div class="mt-3 flex items-baseline justify-between">
+                    <span class="text-3xl font-semibold font-mono text-slate-900 dark:text-slate-100">
+                      ${m.onTimeRate === null ? '—' : m.onTimeRate + '%'}
+                    </span>
+                    <span class="text-xs text-slate-500 dark:text-slate-400 font-mono">${m.onTimeCount} / ${m.completedCount} done</span>
+                  </div>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">
+                    Completed on or before original due date (snoozing does not reset baseline).
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Priority Triage Cards (Dashboard -> Queue Flow) -->
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <h2 class="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                  Priority Triage (Click to Filter Action Queue)
+                </h2>
+                <span class="font-mono text-[11px] text-slate-400 dark:text-slate-500">FLOW: DASHBOARD &rarr; QUEUE</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <button
+                  type="button"
+                  data-jump-queue="overdue"
+                  class="text-left bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-red-400 dark:hover:border-red-500 rounded p-4 transition-colors group"
+                >
+                  <div class="flex items-center justify-between">
+                    <span class="font-mono text-xs uppercase font-semibold text-red-700 dark:text-red-400">Overdue Tasks</span>
+                    <span class="font-mono text-xs text-slate-400 dark:text-slate-500 group-hover:text-slate-800 dark:group-hover:text-slate-200">View &rarr;</span>
+                  </div>
+                  <div class="mt-2 text-2xl font-mono font-semibold text-slate-900 dark:text-slate-100">${m.overdueCount}</div>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Requires immediate follow-up today</p>
+                </button>
+
+                <button
+                  type="button"
+                  data-jump-queue="due_today"
+                  class="text-left bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-amber-400 dark:hover:border-amber-500 rounded p-4 transition-colors group"
+                >
+                  <div class="flex items-center justify-between">
+                    <span class="font-mono text-xs uppercase font-semibold text-amber-800 dark:text-amber-300">Due Today</span>
+                    <span class="font-mono text-xs text-slate-400 dark:text-slate-500 group-hover:text-slate-800 dark:group-hover:text-slate-200">View &rarr;</span>
+                  </div>
+                  <div class="mt-2 text-2xl font-mono font-semibold text-slate-900 dark:text-slate-100">${m.dueTodayCount}</div>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Scheduled for today's shift</p>
+                </button>
+
+                <button
+                  type="button"
+                  data-jump-queue="snoozed"
+                  class="text-left bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-slate-600 dark:hover:border-slate-400 rounded p-4 transition-colors group"
+                >
+                  <div class="flex items-center justify-between">
+                    <span class="font-mono text-xs uppercase font-semibold text-slate-700 dark:text-slate-300">Snoozed Tasks</span>
+                    <span class="font-mono text-xs text-slate-400 dark:text-slate-500 group-hover:text-slate-800 dark:group-hover:text-slate-200">View &rarr;</span>
+                  </div>
+                  <div class="mt-2 text-2xl font-mono font-semibold text-slate-900 dark:text-slate-100">${m.snoozedCount}</div>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Rescheduled follow-ups to monitor</p>
+                </button>
+              </div>
+            </div>
+
+            <!-- Next Up Top 3 Urgent Actions -->
+            <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded">
+              <div class="px-4 py-3 border-b border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 flex flex-wrap items-center justify-between gap-2 rounded-t">
+                <div>
+                  <h2 class="font-mono text-xs uppercase tracking-wider font-semibold text-slate-800 dark:text-slate-100">
+                    Next Up — Top 3 Urgent Actions
+                  </h2>
+                  <p class="text-xs text-slate-500 dark:text-slate-400">Click any row to open it directly in the Action Queue detail panel.</p>
+                </div>
+                <button
+                  type="button"
+                  data-jump-queue="all_open"
+                  class="font-mono text-xs text-slate-700 dark:text-slate-300 hover:underline"
+                >
+                  See all ${m.openCount} open &rarr;
+                </button>
+              </div>
+
+              ${
+                topUrgent.length === 0
+                  ? `<div class="p-6 text-center text-sm text-slate-500 dark:text-slate-400 font-mono">All open actions cleared. Create a new task to continue testing.</div>`
+                  : `<div class="divide-y divide-slate-200 dark:divide-slate-800">
+                      ${topUrgent
+                        .map((task) => {
+                          const cand = getCandidateById(task.candidateId);
+                          return `
+                            <button
+                              type="button"
+                              data-jump-task="${escapeHTML(task.id)}"
+                              class="w-full text-left px-4 py-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 transition-colors"
+                            >
+                              <div class="space-y-1">
+                                <div class="flex flex-wrap items-center gap-2">
+                                  ${renderDueBadge(task)}
+                                  <span class="font-medium text-sm text-slate-900 dark:text-slate-100">${escapeHTML(task.title)}</span>
+                                </div>
+                                <div class="text-xs text-slate-600 dark:text-slate-400 flex flex-wrap items-center gap-2">
+                                  <span class="font-medium text-slate-800 dark:text-slate-200">${escapeHTML(cand ? cand.name : 'Unknown')}</span>
+                                  <span class="text-slate-400 dark:text-slate-600">&bull;</span>
+                                  <span>${escapeHTML(cand ? cand.role : '')}</span>
+                                  <span class="text-slate-400 dark:text-slate-600">&bull;</span>
+                                  ${cand ? renderStageBadge(cand.stage) : ''}
+                                </div>
+                              </div>
+                              <div class="font-mono text-xs text-slate-600 dark:text-slate-400 shrink-0">
+                                Open in Queue &rarr;
+                              </div>
+                            </button>
+                          `;
+                        })
+                        .join('')}
+                    </div>`
+              }
+            </div>
+          </section>
+        `;
+      }
+
+      /* -------------------------------------------------------------------
+       * 8. SCREEN 2: ACTION QUEUE (WITH SPLIT DETAIL PANEL)
+       * ------------------------------------------------------------------- */
+      function renderQueueScreen() {
+        const counts = {
+          all_open: getFilteredQueueTasks('all_open').length,
+          overdue: getFilteredQueueTasks('overdue').length,
+          due_today: getFilteredQueueTasks('due_today').length,
+          snoozed: getFilteredQueueTasks('snoozed').length,
+          completed: getFilteredQueueTasks('completed').length
+        };
+
+        const filteredTasks = getFilteredQueueTasks(state.queueFilter);
+        let selectedTask = filteredTasks.find((t) => t.id === state.selectedTaskId) || null;
+        if (!selectedTask && filteredTasks.length > 0) {
+          selectedTask = filteredTasks[0];
+          state.selectedTaskId = selectedTask.id;
+        }
+
+        const filterDefs = [
+          { key: 'all_open', label: 'All Open', count: counts.all_open },
+          { key: 'overdue', label: 'Overdue', count: counts.overdue },
+          { key: 'due_today', label: 'Due Today', count: counts.due_today },
+          { key: 'snoozed', label: 'Snoozed', count: counts.snoozed },
+          { key: 'completed', label: 'Completed', count: counts.completed }
+        ];
+
+        const selectedCand = selectedTask ? getCandidateById(selectedTask.candidateId) : null;
+
+        return `
+          <section class="space-y-4">
+            <!-- Screen Header -->
+            <div class="flex flex-wrap items-end justify-between gap-3 border-b border-slate-300 dark:border-slate-700 pb-4">
+              <div>
+                <p class="font-mono text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Screen 02 / Daily Execution</p>
+                <h1 class="text-xl font-semibold text-slate-900 dark:text-slate-100 mt-0.5">Action Queue &amp; Detail Panel</h1>
+              </div>
+              <button
+                type="button"
+                data-action="open-new-task"
+                class="px-3.5 py-2 text-xs font-mono font-semibold border border-slate-900 dark:border-slate-100 bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-slate-900 rounded"
+              >
+                + New Task
+              </button>
+            </div>
+
+            <!-- Split Pane Layout (Left 45% / Right 55%) -->
+            <div class="flex flex-col lg:flex-row gap-4 items-start">
+              <!-- LEFT PANE: Filter Tabs + Scrollable Task List (45%) -->
+              <div class="w-full lg:w-[45%] bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded flex flex-col">
+                <!-- Filter Tabs -->
+                <div class="p-2.5 border-b border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 flex flex-wrap gap-1.5 rounded-t">
+                  ${filterDefs
+                    .map((f) => {
+                      const active = state.queueFilter === f.key;
+                      return `
+                        <button
+                          type="button"
+                          data-queue-filter="${f.key}"
+                          class="px-2.5 py-1.5 text-xs font-mono rounded border transition-colors ${
+                            active
+                              ? 'bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 border-slate-900 dark:border-slate-100'
+                              : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800'
+                          }"
+                        >
+                          ${f.label} <span class="opacity-75">(${f.count})</span>
+                        </button>
+                      `;
+                    })
+                    .join('')}
+                </div>
+
+                <!-- Scrollable Task List -->
+                <div class="divide-y divide-slate-200 dark:divide-slate-800 max-h-[600px] overflow-y-auto">
+                  ${
+                    filteredTasks.length === 0
+                      ? `
+                        <div class="p-8 text-center space-y-3">
+                          <p class="font-mono text-xs text-slate-500 dark:text-slate-400 uppercase">No tasks match "${escapeHTML(state.queueFilter.replace('_', ' '))}"</p>
+                          <button
+                            type="button"
+                            data-queue-filter="all_open"
+                            class="px-3 py-1.5 text-xs font-mono border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded"
+                          >
+                            Reset to All Open
+                          </button>
+                        </div>
+                      `
+                      : filteredTasks
+                          .map((task) => {
+                            const cand = getCandidateById(task.candidateId);
+                            const isSelected = selectedTask && selectedTask.id === task.id;
+                            return `
+                              <button
+                                type="button"
+                                data-select-task="${escapeHTML(task.id)}"
+                                class="w-full text-left p-3.5 transition-colors border-l-4 ${
+                                  isSelected
+                                    ? 'bg-slate-100 dark:bg-slate-800 border-l-slate-900 dark:border-l-slate-100'
+                                    : 'bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/60 border-l-transparent'
+                                }"
+                              >
+                                <div class="flex items-start justify-between gap-2">
+                                  <span class="text-sm font-medium text-slate-900 dark:text-slate-100 leading-snug">
+                                    ${escapeHTML(task.title)}
+                                  </span>
+                                  <span class="shrink-0">${renderDueBadge(task)}</span>
+                                </div>
+                                <div class="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 dark:text-slate-400">
+                                  <span>
+                                    <strong class="text-slate-800 dark:text-slate-200">${escapeHTML(cand ? cand.name : 'Unknown')}</strong>
+                                    <span class="text-slate-400 dark:text-slate-600"> &bull; </span>
+                                    ${escapeHTML(cand ? cand.role : '')}
+                                  </span>
+                                  <div class="flex items-center gap-1.5">
+                                    ${
+                                      task.snoozeCount >= 2 && task.status === 'open'
+                                        ? `<span class="font-mono text-[10px] px-1.5 py-0.5 border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 rounded">SNOOZED ${task.snoozeCount}x</span>`
+                                        : ''
+                                    }
+                                    ${cand ? renderStageBadge(cand.stage) : ''}
+                                  </div>
+                                </div>
+                              </button>
+                            `;
+                          })
+                          .join('')
+                  }
+                </div>
+              </div>
+
+              <!-- RIGHT PANE: Selected Task Detail Panel (55%) -->
+              <div class="w-full lg:w-[55%] bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded">
+                ${
+                  !selectedTask
+                    ? `
+                      <div class="p-10 text-center space-y-2">
+                        <p class="font-mono text-xs uppercase text-slate-500 dark:text-slate-400">Detail Panel Empty</p>
+                        <p class="text-sm text-slate-600 dark:text-slate-400">Select a task from the left queue or create a new follow-up.</p>
+                      </div>
+                    `
+                    : `
+                      <!-- Detail Header -->
+                      <div class="p-4 border-b border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 rounded-t space-y-2">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                          <div class="flex items-center gap-2">
+                            <span class="font-mono text-[11px] uppercase px-2 py-0.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 rounded">
+                              ${escapeHTML(selectedTask.type)}
+                            </span>
+                            ${renderDueBadge(selectedTask)}
+                          </div>
+                          <span class="font-mono text-[11px] text-slate-500 dark:text-slate-400">
+                            ID: ${escapeHTML(selectedTask.id)}
+                          </span>
+                        </div>
+                        <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">
+                          ${escapeHTML(selectedTask.title)}
+                        </h2>
+                        <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs font-mono text-slate-600 dark:text-slate-400">
+                          <span>Active Due: <strong class="text-slate-900 dark:text-slate-100">${escapeHTML(selectedTask.dueDate)}</strong> (${escapeHTML(formatShortDate(selectedTask.dueDate))})</span>
+                          <span>Original Due: ${escapeHTML(selectedTask.originalDueDate)}</span>
+                          <span>Status: <strong class="uppercase text-slate-900 dark:text-slate-100">${escapeHTML(selectedTask.status)}</strong></span>
+                        </div>
+                      </div>
+
+                      <!-- Snooze Warning Banner (if snoozed >= 2x) -->
+                      ${
+                        selectedTask.snoozeCount >= 2 && selectedTask.status === 'open'
+                          ? `
+                            <div class="mx-4 mt-4 px-3 py-2 border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/60 text-amber-900 dark:text-amber-200 rounded text-xs font-mono">
+                              [!] Snoozed ${selectedTask.snoozeCount} times. Original due date (${escapeHTML(selectedTask.originalDueDate)}) is preserved for On-Time Analytics.
+                            </div>
+                          `
+                          : ''
+                      }
+
+                      <!-- Notes & Quick Workflow Actions -->
+                      <div class="p-4 space-y-5">
+                        <div>
+                          <h3 class="font-mono text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                            Action Notes
+                          </h3>
+                          <div class="p-3 border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 rounded text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                            ${selectedTask.notes ? escapeHTML(selectedTask.notes) : '<span class="text-slate-400 dark:text-slate-500 italic">No notes added for this task.</span>'}
+                          </div>
+                        </div>
+
+                        <!-- Quick Actions Box -->
+                        <div class="border border-slate-300 dark:border-slate-700 rounded p-3.5 space-y-3.5 bg-white dark:bg-slate-900">
+                          <h3 class="font-mono text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                            Quick Workflow Actions
+                          </h3>
+
+                          <!-- Complete / Reopen + Snooze Controls -->
+                          <div class="flex flex-wrap items-center gap-2">
+                            ${
+                              selectedTask.status === 'open'
+                                ? `
+                                  <button
+                                    type="button"
+                                    data-complete-task="${escapeHTML(selectedTask.id)}"
+                                    class="px-3.5 py-2 text-xs font-mono font-semibold border border-slate-900 dark:border-slate-100 bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-slate-900 rounded"
+                                  >
+                                    &#10003; Mark Complete
+                                  </button>
+                                  <div class="flex flex-wrap items-center gap-1.5 border border-slate-300 dark:border-slate-700 rounded p-1 bg-slate-50 dark:bg-slate-800/70">
+                                    <span class="font-mono text-[11px] text-slate-500 dark:text-slate-400 px-1.5">Snooze:</span>
+                                    <button
+                                      type="button"
+                                      data-snooze-task="${escapeHTML(selectedTask.id)}"
+                                      data-snooze-mode="+1d"
+                                      class="px-2 py-1 text-xs font-mono border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded"
+                                    >
+                                      +1 Day
+                                    </button>
+                                    <button
+                                      type="button"
+                                      data-snooze-task="${escapeHTML(selectedTask.id)}"
+                                      data-snooze-mode="+3d"
+                                      class="px-2 py-1 text-xs font-mono border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded"
+                                    >
+                                      +3 Days
+                                    </button>
+                                    <button
+                                      type="button"
+                                      data-snooze-task="${escapeHTML(selectedTask.id)}"
+                                      data-snooze-mode="next_mon"
+                                      class="px-2 py-1 text-xs font-mono border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded"
+                                    >
+                                      Next Mon
+                                    </button>
+                                  </div>
+                                `
+                                : `
+                                  <button
+                                    type="button"
+                                    data-reopen-task="${escapeHTML(selectedTask.id)}"
+                                    class="px-3.5 py-2 text-xs font-mono border border-slate-400 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 rounded"
+                                  >
+                                    Reopen Task
+                                  </button>
+                                `
+                            }
+                          </div>
+
+                          <!-- Inline Stage Update for Linked Candidate -->
+                          ${
+                            selectedCand
+                              ? `
+                                <div class="pt-3 border-t border-slate-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-2">
+                                  <label for="queueStageSelect" class="font-mono text-xs text-slate-600 dark:text-slate-400">
+                                    Change Candidate Stage:
+                                  </label>
+                                  <select
+                                    id="queueStageSelect"
+                                    data-stage-select="${escapeHTML(selectedCand.id)}"
+                                    class="px-2.5 py-1.5 text-xs font-mono border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-slate-800 dark:focus:border-slate-300"
+                                  >
+                                    ${STAGES.map(
+                                      (st) =>
+                                        `<option value="${st}" ${selectedCand.stage === st ? 'selected' : ''}>${st}</option>`
+                                    ).join('')}
+                                  </select>
+                                </div>
+                              `
+                              : ''
+                          }
+                        </div>
+
+                        <!-- Linked Candidate Summary Card + Primary Journey CTA -->
+                        ${
+                          selectedCand
+                            ? `
+                              <div class="border border-slate-300 dark:border-slate-700 rounded p-4 bg-slate-50 dark:bg-slate-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <div class="space-y-1">
+                                  <p class="font-mono text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                    Linked Candidate
+                                  </p>
+                                  <p class="font-semibold text-base text-slate-900 dark:text-slate-100">${escapeHTML(selectedCand.name)}</p>
+                                  <p class="text-xs text-slate-600 dark:text-slate-400">
+                                    ${escapeHTML(selectedCand.role)} &bull; ${escapeHTML(selectedCand.client)}
+                                  </p>
+                                  <div class="pt-1 flex items-center gap-2">
+                                    ${renderStageBadge(selectedCand.stage)}
+                                    <span class="font-mono text-[11px] text-slate-500 dark:text-slate-400">${escapeHTML(selectedCand.email)}</span>
+                                  </div>
+                                </div>
+
+                                <button
+                                  type="button"
+                                  data-open-candidate="${escapeHTML(selectedCand.id)}"
+                                  data-origin="queue"
+                                  class="px-4 py-2.5 text-xs font-mono font-semibold border border-slate-900 dark:border-slate-100 bg-white dark:bg-slate-900 hover:bg-slate-900 dark:hover:bg-slate-100 hover:text-white dark:hover:text-slate-900 text-slate-900 dark:text-slate-100 rounded transition-colors shrink-0"
+                                >
+                                  Open Candidate Detail &rarr;
+                                </button>
+                              </div>
+                            `
+                            : ''
+                        }
+                      </div>
+                    `
+                }
+              </div>
+            </div>
+          </section>
+        `;
+      }
+
+      /* -------------------------------------------------------------------
+       * 9. SCREEN 3: PIPELINE (5-COLUMN KANBAN WIREFRAME)
+       * ------------------------------------------------------------------- */
+      function renderPipelineScreen() {
+        return `
+          <section class="space-y-4">
+            <!-- Screen Header -->
+            <div class="flex flex-wrap items-end justify-between gap-3 border-b border-slate-300 dark:border-slate-700 pb-4">
+              <div>
+                <p class="font-mono text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Screen 03 / Stage Board</p>
+                <h1 class="text-xl font-semibold text-slate-900 dark:text-slate-100 mt-0.5">Candidate Pipeline</h1>
+              </div>
+              <span class="font-mono text-xs text-slate-500 dark:text-slate-400">
+                ${state.candidates.length} Active Candidates &bull; Click any card to open Candidate Detail
+              </span>
+            </div>
+
+            <!-- 5-Column Kanban Board -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 items-start">
+              ${STAGES.map((stage, stageIdx) => {
+                const colCandidates = state.candidates.filter((c) => c.stage === stage);
+                return `
+                  <div class="bg-slate-50 dark:bg-slate-900/60 border border-slate-300 dark:border-slate-700 rounded flex flex-col min-h-[340px]">
+                    <!-- Column Header -->
+                    <div class="px-3 py-2.5 border-b border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 flex items-center justify-between rounded-t">
+                      <span class="font-mono text-xs font-semibold uppercase tracking-wider text-slate-800 dark:text-slate-100">
+                        ${escapeHTML(stage)}
+                      </span>
+                      <span class="font-mono text-xs px-1.5 py-0.5 border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded">
+                        ${colCandidates.length}
+                      </span>
+                    </div>
+
+                    <!-- Column Cards -->
+                    <div class="p-2.5 space-y-2.5 flex-1">
+                      ${
+                        colCandidates.length === 0
+                          ? `<div class="p-4 border border-dashed border-slate-300 dark:border-slate-700 rounded text-center font-mono text-[11px] text-slate-400 dark:text-slate-500">No candidates</div>`
+                          : colCandidates
+                              .map((cand) => {
+                                const openTasks = sortTasksByUrgency(
+                                  state.tasks.filter((t) => t.candidateId === cand.id && t.status === 'open')
+                                );
+                                const nextTask = openTasks[0] || null;
+                                const hasOverdue = openTasks.some(isTaskOverdue);
+
+                                return `
+                                  <div class="bg-white dark:bg-slate-900 border ${hasOverdue ? 'border-red-300 dark:border-red-800' : 'border-slate-300 dark:border-slate-700'} rounded p-3 space-y-2.5">
+                                    <!-- Clickable Candidate Header -> Screen 4 -->
+                                    <button
+                                      type="button"
+                                      data-open-candidate="${escapeHTML(cand.id)}"
+                                      data-origin="pipeline"
+                                      class="w-full text-left group focus:outline-none"
+                                    >
+                                      <div class="flex items-start justify-between gap-1">
+                                        <span class="font-semibold text-sm text-slate-900 dark:text-slate-100 group-hover:underline">
+                                          ${escapeHTML(cand.name)}
+                                        </span>
+                                        ${
+                                          hasOverdue
+                                            ? `<span class="font-mono text-[10px] px-1 py-0.5 border border-red-300 dark:border-red-800 bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300 rounded shrink-0">OVERDUE</span>`
+                                            : ''
+                                        }
+                                      </div>
+                                      <p class="text-xs text-slate-600 dark:text-slate-400 mt-0.5">${escapeHTML(cand.role)}</p>
+                                      <p class="font-mono text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">${escapeHTML(cand.client)}</p>
+                                    </button>
+
+                                    <!-- Next Open Action Preview -->
+                                    <div class="pt-2 border-t border-slate-200 dark:border-slate-800">
+                                      ${
+                                        nextTask
+                                          ? `
+                                            <p class="font-mono text-[10px] uppercase text-slate-400 dark:text-slate-500">Next Action:</p>
+                                            <p class="text-xs text-slate-800 dark:text-slate-200 mt-0.5 line-clamp-2">${escapeHTML(nextTask.title)}</p>
+                                            <div class="mt-1.5">${renderDueBadge(nextTask)}</div>
+                                          `
+                                          : `
+                                            <p class="font-mono text-[11px] px-2 py-1 border border-dashed border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 rounded">
+                                              No pending action
+                                            </p>
+                                          `
+                                      }
+                                    </div>
+
+                                    <!-- Quick Move Stage Controls -->
+                                    <div class="pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-1">
+                                      <button
+                                        type="button"
+                                        data-move-stage-cand="${escapeHTML(cand.id)}"
+                                        data-move-stage-target="${stageIdx > 0 ? STAGES[stageIdx - 1] : ''}"
+                                        ${stageIdx === 0 ? 'disabled' : ''}
+                                        class="px-2 py-1 text-xs font-mono border border-slate-300 dark:border-slate-600 rounded ${
+                                          stageIdx === 0
+                                            ? 'opacity-35 cursor-not-allowed bg-slate-50 dark:bg-slate-800 text-slate-400'
+                                            : 'bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200'
+                                        }"
+                                        title="Move to previous stage"
+                                      >
+                                        &larr;
+                                      </button>
+
+                                      <select
+                                        aria-label="Move stage for ${escapeHTML(cand.name)}"
+                                        data-stage-select="${escapeHTML(cand.id)}"
+                                        class="flex-1 min-w-0 px-1.5 py-1 text-[11px] font-mono border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-slate-800 dark:focus:border-slate-300"
+                                      >
+                                        ${STAGES.map(
+                                          (st) =>
+                                            `<option value="${st}" ${cand.stage === st ? 'selected' : ''}>${st}</option>`
+                                        ).join('')}
+                                      </select>
+
+                                      <button
+                                        type="button"
+                                        data-move-stage-cand="${escapeHTML(cand.id)}"
+                                        data-move-stage-target="${stageIdx < STAGES.length - 1 ? STAGES[stageIdx + 1] : ''}"
+                                        ${stageIdx === STAGES.length - 1 ? 'disabled' : ''}
+                                        class="px-2 py-1 text-xs font-mono border border-slate-300 dark:border-slate-600 rounded ${
+                                          stageIdx === STAGES.length - 1
+                                            ? 'opacity-35 cursor-not-allowed bg-slate-50 dark:bg-slate-800 text-slate-400'
+                                            : 'bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200'
+                                        }"
+                                        title="Move to next stage"
+                                      >
+                                        &rarr;
+                                      </button>
+                                    </div>
+                                  </div>
+                                `;
+                              })
+                              .join('')
+                      }
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </section>
+        `;
+      }
+
+      /* -------------------------------------------------------------------
+       * 10. SCREEN 4: CANDIDATE DETAIL
+       * ------------------------------------------------------------------- */
+      function renderCandidateScreen() {
+        const cand = getCandidateById(state.selectedCandidateId) || state.candidates[0];
+        if (!cand) return `<p class="font-mono text-sm">No candidate found.</p>`;
+
+        const originLabels = {
+          queue: 'Action Queue',
+          pipeline: 'Pipeline',
+          dashboard: 'Dashboard'
+        };
+        const backTarget = originLabels[state.candidateOrigin] ? state.candidateOrigin : 'queue';
+        const backLabel = originLabels[backTarget];
+
+        const candTasks = sortTasksByUrgency(state.tasks.filter((t) => t.candidateId === cand.id));
+        const openTasks = candTasks.filter((t) => t.status === 'open');
+        const completedTasks = candTasks.filter((t) => t.status === 'completed');
+
+        return `
+          <section class="space-y-5">
+            <!-- Top Breadcrumb + Quick Candidate Switcher -->
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <button
+                type="button"
+                data-back-screen="${backTarget}"
+                class="font-mono text-xs px-3 py-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 rounded"
+              >
+                &larr; Back to ${escapeHTML(backLabel)}
+              </button>
+
+              <div class="flex items-center gap-2">
+                <label for="candidateSwitcher" class="font-mono text-[11px] uppercase text-slate-500 dark:text-slate-400">
+                  Switch Candidate:
+                </label>
+                <select
+                  id="candidateSwitcher"
+                  class="px-2.5 py-1.5 text-xs font-mono border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 rounded focus:outline-none focus:border-slate-800 dark:focus:border-slate-300"
+                >
+                  ${state.candidates
+                    .map(
+                      (c) =>
+                        `<option value="${escapeHTML(c.id)}" ${c.id === cand.id ? 'selected' : ''}>${escapeHTML(c.name)} (${escapeHTML(c.stage)})</option>`
+                    )
+                    .join('')}
+                </select>
+              </div>
+            </div>
+
+            <!-- Candidate Header Card -->
+            <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div class="space-y-1.5">
+                <p class="font-mono text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                  Screen 04 / Candidate Record &bull; ${escapeHTML(cand.client)}
+                </p>
+                <h1 class="text-2xl font-semibold text-slate-900 dark:text-slate-100">${escapeHTML(cand.name)}</h1>
+                <p class="text-sm text-slate-700 dark:text-slate-300">${escapeHTML(cand.role)}</p>
+                <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-mono text-slate-500 dark:text-slate-400 pt-1">
+                  <span>Email: ${escapeHTML(cand.email)}</span>
+                  <span>Phone: ${escapeHTML(cand.phone)}</span>
+                </div>
+              </div>
+
+              <!-- Editable Stage Dropdown -->
+              <div class="border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/70 rounded p-3.5 min-w-[210px]">
+                <label for="candidateDetailStageSelect" class="block font-mono text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                  Current Pipeline Stage
+                </label>
+                <select
+                  id="candidateDetailStageSelect"
+                  data-stage-select="${escapeHTML(cand.id)}"
+                  class="w-full px-3 py-2 text-sm font-mono font-medium border border-slate-400 dark:border-slate-600 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded focus:outline-none focus:border-slate-900 dark:focus:border-slate-200"
+                >
+                  ${STAGES.map(
+                    (st) => `<option value="${st}" ${cand.stage === st ? 'selected' : ''}>${st}</option>`
+                  ).join('')}
+                </select>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5 font-mono">
+                  Syncs across Pipeline &amp; Queue
+                </p>
+              </div>
+            </div>
+
+            <!-- Two-Column Wireframe Body -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+              <!-- LEFT COLUMN (7 cols): Candidate's Tasks + Quick Add Form -->
+              <div class="lg:col-span-7 space-y-4">
+                <!-- Inline Quick Add Task for Candidate -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded p-4">
+                  <h2 class="font-mono text-xs uppercase tracking-wider font-semibold text-slate-800 dark:text-slate-100 mb-3">
+                    + Add Task for ${escapeHTML(cand.name)}
+                  </h2>
+                  <form id="candidateQuickTaskForm" data-candidate-id="${escapeHTML(cand.id)}" class="space-y-3" novalidate>
+                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
+                      <input
+                        id="quickTaskTitle"
+                        type="text"
+                        placeholder="Follow-up action title..."
+                        class="sm:col-span-6 px-3 py-2 text-sm border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 rounded focus:outline-none focus:border-slate-800 dark:focus:border-slate-300"
+                      />
+                      <input
+                        id="quickTaskDueDate"
+                        type="date"
+                        value="${TODAY}"
+                        class="sm:col-span-3 px-2.5 py-2 text-xs font-mono border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded focus:outline-none focus:border-slate-800 dark:focus:border-slate-300"
+                      />
+                      <button
+                        type="submit"
+                        class="sm:col-span-3 px-3 py-2 text-xs font-mono font-semibold border border-slate-900 dark:border-slate-100 bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-slate-900 rounded"
+                      >
+                        Add Task
+                      </button>
+                    </div>
+                    <p id="quickTaskError" class="hidden text-xs font-mono text-red-700 dark:text-red-400">
+                      Please enter a task title and due date.
+                    </p>
+                  </form>
+                </div>
+
+                <!-- Open Tasks List -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded">
+                  <div class="px-4 py-3 border-b border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 flex items-center justify-between rounded-t">
+                    <h2 class="font-mono text-xs uppercase tracking-wider font-semibold text-slate-800 dark:text-slate-100">
+                      Open Tasks (${openTasks.length})
+                    </h2>
+                  </div>
+                  ${
+                    openTasks.length === 0
+                      ? `<div class="p-5 text-xs font-mono text-slate-500 dark:text-slate-400">No open tasks for this candidate.</div>`
+                      : `<div class="divide-y divide-slate-200 dark:divide-slate-800">
+                          ${openTasks
+                            .map(
+                              (t) => `
+                                <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                  <div class="space-y-1">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                      ${renderDueBadge(t)}
+                                      <span class="text-sm font-medium text-slate-900 dark:text-slate-100">${escapeHTML(t.title)}</span>
+                                    </div>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 font-mono">
+                                      ${escapeHTML(t.type)} &bull; Due ${escapeHTML(t.dueDate)}
+                                      ${t.snoozeCount > 0 ? ` &bull; Snoozed ${t.snoozeCount}x` : ''}
+                                    </p>
+                                  </div>
+                                  <div class="flex items-center gap-1.5 shrink-0">
+                                    <button
+                                      type="button"
+                                      data-complete-task="${escapeHTML(t.id)}"
+                                      class="px-2.5 py-1.5 text-xs font-mono border border-slate-900 dark:border-slate-100 bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-slate-900 rounded"
+                                    >
+                                      Complete
+                                    </button>
+                                    <button
+                                      type="button"
+                                      data-snooze-task="${escapeHTML(t.id)}"
+                                      data-snooze-mode="+1d"
+                                      class="px-2.5 py-1.5 text-xs font-mono border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded"
+                                    >
+                                      Snooze (+1d)
+                                    </button>
+                                  </div>
+                                </div>
+                              `
+                            )
+                            .join('')}
+                        </div>`
+                  }
+                </div>
+
+                <!-- Completed Tasks List -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded">
+                  <div class="px-4 py-3 border-b border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 rounded-t">
+                    <h2 class="font-mono text-xs uppercase tracking-wider font-semibold text-slate-700 dark:text-slate-300">
+                      Completed Tasks (${completedTasks.length})
+                    </h2>
+                  </div>
+                  ${
+                    completedTasks.length === 0
+                      ? `<div class="p-5 text-xs font-mono text-slate-500 dark:text-slate-400">No completed tasks yet.</div>`
+                      : `<div class="divide-y divide-slate-200 dark:divide-slate-800">
+                          ${completedTasks
+                            .map((t) => {
+                              const onTime = t.completedAt && diffDays(t.completedAt, t.originalDueDate) <= 0;
+                              return `
+                                <div class="p-3.5 flex items-center justify-between gap-2 text-slate-600 dark:text-slate-400">
+                                  <div>
+                                    <p class="text-sm line-through">${escapeHTML(t.title)}</p>
+                                    <p class="font-mono text-[11px] text-slate-400 dark:text-slate-500">
+                                      Done ${escapeHTML(formatShortDate(t.completedAt))} &bull; ${onTime ? 'On-time' : 'Past original due date'}
+                                    </p>
+                                  </div>
+                                  <button
+                                    type="button"
+                                    data-reopen-task="${escapeHTML(t.id)}"
+                                    class="px-2 py-1 text-[11px] font-mono border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded shrink-0"
+                                  >
+                                    Reopen
+                                  </button>
+                                </div>
+                              `;
+                            })
+                            .join('')}
+                        </div>`
+                  }
+                </div>
+              </div>
+
+              <!-- RIGHT COLUMN (5 cols): Activity & Stage History Log -->
+              <div class="lg:col-span-5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded">
+                <div class="px-4 py-3 border-b border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 rounded-t">
+                  <h2 class="font-mono text-xs uppercase tracking-wider font-semibold text-slate-800 dark:text-slate-100">
+                    Activity &amp; Stage History (${cand.activity.length})
+                  </h2>
+                </div>
+                <div class="p-4 space-y-3 max-h-[540px] overflow-y-auto">
+                  ${
+                    cand.activity.length === 0
+                      ? `<p class="font-mono text-xs text-slate-500 dark:text-slate-400">No logged activity yet.</p>`
+                      : cand.activity
+                          .map(
+                            (item) => `
+                              <div class="border-l-2 border-slate-300 dark:border-slate-700 pl-3 py-0.5 space-y-0.5">
+                                <p class="text-xs text-slate-800 dark:text-slate-200 leading-snug">${escapeHTML(item.text)}</p>
+                                <p class="font-mono text-[10px] uppercase text-slate-400 dark:text-slate-500">${escapeHTML(item.time)}</p>
+                              </div>
+                            `
+                          )
+                          .join('')
+                  }
+                </div>
+              </div>
+            </div>
+          </section>
+        `;
+      }
+
+      /* -------------------------------------------------------------------
+       * 11. MODAL CONTROLS (CREATE NEW TASK)
+       * ------------------------------------------------------------------- */
+      function openNewTaskModal() {
+        const modal = document.getElementById('newTaskModal');
+        const candSelect = document.getElementById('modalTaskCandidate');
+        const dueInput = document.getElementById('modalTaskDueDate');
+        const titleInput = document.getElementById('modalTaskTitle');
+        const notesInput = document.getElementById('modalTaskNotes');
+
+        candSelect.innerHTML = state.candidates
+          .map(
+            (c) =>
+              `<option value="${escapeHTML(c.id)}">${escapeHTML(c.name)} — ${escapeHTML(c.role)} (${escapeHTML(c.stage)})</option>`
+          )
+          .join('');
+
+        titleInput.value = '';
+        notesInput.value = '';
+        dueInput.value = TODAY;
+        document.getElementById('modalTaskTitleError').classList.add('hidden');
+        document.getElementById('modalTaskDueError').classList.add('hidden');
+
+        modal.classList.remove('hidden');
+        titleInput.focus();
+      }
+
+      function closeNewTaskModal() {
+        document.getElementById('newTaskModal').classList.add('hidden');
+      }
+
+      /* -------------------------------------------------------------------
+       * 12. MASTER RENDER & EVENT DELEGATION
+       * ------------------------------------------------------------------- */
+      function updateTopNav() {
+        document.querySelectorAll('.screen-tab').forEach((btn) => {
+          const isActive = btn.getAttribute('data-screen-tab') === state.activeScreen;
+          btn.className = isActive
+            ? 'screen-tab px-3 py-1.5 text-xs sm:text-sm font-medium rounded border bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 border-slate-900 dark:border-slate-100 transition-colors whitespace-nowrap'
+            : 'screen-tab px-3 py-1.5 text-xs sm:text-sm font-medium rounded border bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap';
+        });
+      }
+
+      function render() {
+        try {
+          updateTopNav();
+          updateThemeToggleLabel();
+          const main = document.getElementById('appMain');
+          if (!main) return;
+
+          if (state.activeScreen === 'dashboard') {
+            main.innerHTML = renderDashboardScreen();
+          } else if (state.activeScreen === 'queue') {
+            main.innerHTML = renderQueueScreen();
+          } else if (state.activeScreen === 'pipeline') {
+            main.innerHTML = renderPipelineScreen();
+          } else if (state.activeScreen === 'candidate') {
+            main.innerHTML = renderCandidateScreen();
+          }
+        } catch (err) {
+          console.error('Wireframe render error:', err);
+        }
+      }
+
+      /* Global Click Event Delegation */
+      document.addEventListener('click', (e) => {
+        const target = e.target.closest('button');
+        if (!target) return;
+
+        // Theme toggle
+        if (target.id === 'themeToggleBtn') {
+          toggleTheme();
+          return;
+        }
+
+        // Top nav tabs
+        const tabScreen = target.getAttribute('data-screen-tab');
+        if (tabScreen) {
+          navigateTo(tabScreen);
+          return;
+        }
+
+        // Brand logo -> Dashboard
+        if (target.id === 'brandHomeBtn') {
+          navigateTo('dashboard');
+          return;
+        }
+
+        // Core flow hint -> Jump to Dashboard & show flow tip
+        if (target.id === 'coreFlowBtn') {
+          navigateTo('dashboard');
+          showToast('Core Flow: Click an Overdue card or Next Up row → Queue → Open Candidate Detail.');
+          return;
+        }
+
+        // Open New Task Modal
+        if (target.getAttribute('data-action') === 'open-new-task') {
+          openNewTaskModal();
+          return;
+        }
+
+        // Close New Task Modal
+        if (target.id === 'closeNewTaskModalBtn' || target.id === 'cancelNewTaskBtn') {
+          closeNewTaskModal();
+          return;
+        }
+
+        // Dashboard -> Queue (filtered)
+        const jumpQueue = target.getAttribute('data-jump-queue');
+        if (jumpQueue) {
+          navigateTo('queue', { filter: jumpQueue });
+          return;
+        }
+
+        // Dashboard Next Up -> Queue (specific task pre-selected)
+        const jumpTask = target.getAttribute('data-jump-task');
+        if (jumpTask) {
+          navigateTo('queue', { filter: 'all_open', taskId: jumpTask });
+          return;
+        }
+
+        // Action Queue filter tab
+        const queueFilter = target.getAttribute('data-queue-filter');
+        if (queueFilter) {
+          state.queueFilter = queueFilter;
+          const list = getFilteredQueueTasks(queueFilter);
+          state.selectedTaskId = list.length ? list[0].id : null;
+          render();
+          return;
+        }
+
+        // Action Queue select task in list
+        const selectTaskId = target.getAttribute('data-select-task');
+        if (selectTaskId) {
+          recordQueueIdentificationIfNeeded();
+          state.selectedTaskId = selectTaskId;
+          render();
+          return;
+        }
+
+        // Complete task
+        const completeId = target.getAttribute('data-complete-task');
+        if (completeId) {
+          completeTask(completeId);
+          return;
+        }
+
+        // Reopen task
+        const reopenId = target.getAttribute('data-reopen-task');
+        if (reopenId) {
+          reopenTask(reopenId);
+          return;
+        }
+
+        // Snooze task
+        const snoozeId = target.getAttribute('data-snooze-task');
+        if (snoozeId) {
+          const mode = target.getAttribute('data-snooze-mode') || '+1d';
+          snoozeTask(snoozeId, mode);
+          return;
+        }
+
+        // Open Candidate Detail (Queue -> Candidate or Pipeline -> Candidate)
+        const openCandId = target.getAttribute('data-open-candidate');
+        if (openCandId) {
+          recordQueueIdentificationIfNeeded();
+          const origin = target.getAttribute('data-origin') || state.activeScreen;
+          navigateTo('candidate', { candidateId: openCandId, origin });
+          return;
+        }
+
+        // Pipeline arrow move stage
+        const moveStageCand = target.getAttribute('data-move-stage-cand');
+        if (moveStageCand) {
+          const targetStage = target.getAttribute('data-move-stage-target');
+          if (targetStage) {
+            changeCandidateStage(moveStageCand, targetStage);
+          }
+          return;
+        }
+
+        // Candidate Detail Back Breadcrumb
+        const backScreen = target.getAttribute('data-back-screen');
+        if (backScreen) {
+          navigateTo(backScreen);
+          return;
+        }
+      });
+
+      /* Global Change Event Delegation (Dropdowns) */
+      document.addEventListener('change', (e) => {
+        const el = e.target;
+        if (!el) return;
+
+        // Stage change dropdown (Queue, Pipeline, Candidate Detail)
+        const stageCandId = el.getAttribute('data-stage-select');
+        if (stageCandId) {
+          changeCandidateStage(stageCandId, el.value);
+          return;
+        }
+
+        // Candidate Switcher on Screen 4
+        if (el.id === 'candidateSwitcher') {
+          state.selectedCandidateId = el.value;
+          render();
+        }
+      });
+
+      /* Global Form Submissions */
+      document.addEventListener('submit', (e) => {
+        const form = e.target;
+
+        // Modal Create Task Form
+        if (form.id === 'newTaskForm') {
+          e.preventDefault();
+          const title = document.getElementById('modalTaskTitle').value.trim();
+          const candidateId = document.getElementById('modalTaskCandidate').value;
+          const dueDate = document.getElementById('modalTaskDueDate').value;
+          const type = document.getElementById('modalTaskType').value;
+          const notes = document.getElementById('modalTaskNotes').value;
+
+          const titleErr = document.getElementById('modalTaskTitleError');
+          const dueErr = document.getElementById('modalTaskDueError');
+          titleErr.classList.toggle('hidden', Boolean(title));
+          dueErr.classList.toggle('hidden', Boolean(dueDate));
+
+          if (!title || !dueDate) return;
+
+          closeNewTaskModal();
+          createTask({ title, candidateId, dueDate, type, notes });
+          return;
+        }
+
+        // Candidate Detail Inline Quick Task Form
+        if (form.id === 'candidateQuickTaskForm') {
+          e.preventDefault();
+          const candidateId = form.getAttribute('data-candidate-id');
+          const title = document.getElementById('quickTaskTitle').value.trim();
+          const dueDate = document.getElementById('quickTaskDueDate').value;
+          const errEl = document.getElementById('quickTaskError');
+
+          if (!title || !dueDate) {
+            errEl.classList.remove('hidden');
+            return;
+          }
+          errEl.classList.add('hidden');
+          createTask({
+            title,
+            candidateId,
+            dueDate,
+            type: 'Follow-up Call',
+            notes: ''
+          });
+        }
+      });
+
+      /* Close modal on backdrop click or Escape key */
+      document.getElementById('newTaskModal').addEventListener('click', (e) => {
+        if (e.target.id === 'newTaskModal') closeNewTaskModal();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeNewTaskModal();
+      });
+
+      /* Initial Render */
+      render();
+    })();
+  </script>
+</body>
+</html>

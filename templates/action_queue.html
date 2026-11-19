@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Action Queue · HirePulse{% endblock %}
+
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+  <h1 style="margin:0;">Action Queue</h1>
+  <details>
+    <summary class="btn primary" style="list-style:none;">+ New Task</summary>
+    <form class="card inline-form" style="margin-top:10px;" onsubmit="submitTaskForm(event)">
+      <label>Application
+        <select name="application_id" required>
+          {% for a in applications %}
+          <option value="{{ a.application_id }}">{{ a.candidate }} — {{ a.job_title }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>Action Type
+        <input name="action_type" placeholder="Follow up with client" required />
+      </label>
+      <label>Due Date
+        <input type="date" name="due_at" required />
+      </label>
+      <label>Recruiter
+        <select name="assigned_recruiter_id" required>
+          {% for r in recruiters %}
+          <option value="{{ r.recruiter_id }}">{{ r.name }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <button type="submit" class="primary">Create</button>
+    </form>
+  </details>
+</div>
+
+<div class="tabs">
+  {% for key, label in [('all','All Pending'),('high','High'),('medium','Medium'),('low','Low'),('overdue','Overdue'),('today','Due Today'),('completed','Completed')] %}
+  <a href="/queue?filter={{ key }}" class="{{ 'active' if active == key }}">{{ label }}</a>
+  {% endfor %}
+</div>
+
+<div class="queue-split">
+  <div class="card" style="padding:0;overflow:hidden;">
+    <table>
+      <thead>
+        <tr>
+          <th>Score</th><th>Action</th><th>Candidate</th><th>Job</th><th>Stage</th><th>Due</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        <tr class="clickable" onclick="selectQueueRow(this)" data-action='{{ r | tojson }}'>
+          <td><span class="badge badge-{{ r.priority }}">{{ r.priority }} {{ r.score }}</span></td>
+          <td>
+            <strong>{{ r.action_type }}</strong>
+            <div class="muted">{{ r.reasons_text }}</div>
+          </td>
+          <td>{{ r.candidate }}</td>
+          <td>{{ r.job_title }}</td>
+          <td><span class="badge badge-neutral">{{ r.stage }}</span></td>
+          <td>{{ r.due_at }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="muted" style="text-align:center;padding:24px;">No actions in this view.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <aside class="card detail-panel">
+    <div id="detail-content">
+      <p class="muted">Select an action row to inspect priority reasons and take action.</p>
+    </div>
+    <div class="guardrail">
+      Prioritises workflow actions, not people. No candidate scoring.
+    </div>
+  </aside>
+</div>
+{% endblock %}

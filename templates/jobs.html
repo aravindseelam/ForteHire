@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Jobs · HirePulse{% endblock %}
+{% block content %}
+<h1>Jobs</h1>
+<div class="card" style="padding:0;overflow:hidden;">
+  <table>
+    <thead><tr><th>Job Title</th><th>Company</th><th>Priority</th><th>Target Fill</th><th>Applicants</th><th>Interviews</th><th>Overdue Actions</th></tr></thead>
+    <tbody>
+      {% for j in jobs %}
+      <tr>
+        <td><strong>{{ j.job_title }}</strong></td>
+        <td>{{ j.company }}</td>
+        <td><span class="badge badge-{{ 'High' if j.priority in ('High','Critical') else ('Medium' if j.priority == 'Normal' else 'Low') }}">{{ j.priority }}</span></td>
+        <td>{{ j.target_fill_date }}</td>
+        <td>{{ j.applicant_count }}</td>
+        <td>{{ j.interview_count }}</td>
+        <td class="{{ 'danger' if j.overdue_actions > 0 }}">{{ j.overdue_actions }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

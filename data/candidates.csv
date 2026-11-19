@@ -1,0 +1,31 @@
+candidate_id,name,email,experience,location
+1,Rahul Sharma,rahul.sharma@example.com,4,Bengaluru
+2,Aditi Verma,aditi.verma@example.com,2,Bengaluru
+3,Vikram Singh,vikram.singh@example.com,5,Hyderabad
+4,Sneha Kulkarni,sneha.kulkarni@example.com,4,Hyderabad
+5,Arjun Reddy,arjun.reddy@example.com,2,Chennai
+6,Meera Joshi,meera.joshi@example.com,9,Bengaluru
+7,Karthik Rao,karthik.rao@example.com,10,Mumbai
+8,Neha Gupta,neha.gupta@example.com,1,Bengaluru
+9,Siddharth Jain,siddharth.jain@example.com,2,Hyderabad
+10,Pooja Menon,pooja.menon@example.com,4,Delhi NCR
+11,Nikhil Das,nikhil.das@example.com,10,Bengaluru
+12,Divya Kapoor,divya.kapoor@example.com,9,Hyderabad
+13,Varun Malhotra,varun.malhotra@example.com,9,Mumbai
+14,Ritika Bose,ritika.bose@example.com,4,Mumbai
+15,Abhishek Tiwari,abhishek.tiwari@example.com,10,Pune
+16,Tanvi Deshmukh,tanvi.deshmukh@example.com,1,Hyderabad
+17,Pranav Shetty,pranav.shetty@example.com,7,Pune
+18,Komal Agarwal,komal.agarwal@example.com,5,Hyderabad
+19,Harshvardhan Patel,harshvardhan.patel@example.com,4,Pune
+20,Shreya Sen,shreya.sen@example.com,2,Bengaluru
+21,Deepak Chawla,deepak.chawla@example.com,7,Bengaluru
+22,Ishita Roy,ishita.roy@example.com,6,Pune
+23,Manish Yadav,manish.yadav@example.com,10,Pune
+24,Anjali Pillai,anjali.pillai@example.com,1,Chennai
+25,Gaurav Mishra,gaurav.mishra@example.com,8,Delhi NCR
+26,Swati Bansal,swati.bansal@example.com,2,Mumbai
+27,Rishabh Saxena,rishabh.saxena@example.com,2,Delhi NCR
+28,Kavya Krishnan,kavya.krishnan@example.com,5,Chennai
+29,Tushar Khanna,tushar.khanna@example.com,10,Pune
+30,Nandini Bhatt,nandini.bhatt@example.com,10,Hyderabad

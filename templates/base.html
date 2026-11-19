@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}HirePulse{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">HirePulse</div>
+      <div class="brand-sub">Workflow Optimisation</div>
+      <nav class="nav">
+        <a href="/" class="{{ 'active' if request.path == '/' }}">Dashboard</a>
+        <a href="/queue" class="{{ 'active' if request.path.startswith('/queue') }}">Action Queue</a>
+        <a href="/pipeline" class="{{ 'active' if request.path.startswith('/pipeline') }}">Pipeline</a>
+        <a href="/candidates" class="{{ 'active' if request.path.startswith('/candidates') }}">Candidates</a>
+        <a href="/jobs" class="{{ 'active' if request.path.startswith('/jobs') }}">Jobs</a>
+        <a href="/analytics" class="{{ 'active' if request.path.startswith('/analytics') }}">Analytics</a>
+      </nav>
+    </aside>
+
+    <div class="main-wrap">
+      <main class="content">
+        {% block content %}{% endblock %}
+      </main>
+      <footer class="footer">
+        Synthetic demo data · HirePulse prioritises workflow actions, not candidates.
+      </footer>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

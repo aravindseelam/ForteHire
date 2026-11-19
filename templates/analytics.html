@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Analytics · HirePulse{% endblock %}
+{% block content %}
+<h1>Workflow Analytics</h1>
+
+<form class="card inline-form" method="get" action="/analytics">
+  <label>Recruiter
+    <select name="recruiter">
+      <option value="">All Recruiters</option>
+      {% for r in recruiters %}
+      <option value="{{ r.recruiter_id }}" {{ 'selected' if selected_recruiter == r.recruiter_id|string }}>{{ r.name }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Due From <input type="date" name="start" value="{{ start }}" /></label>
+  <label>Due To <input type="date" name="end" value="{{ end }}" /></label>
+  <button type="submit" class="primary">Apply</button>
+</form>
+
+<section class="kpi-grid">
+  <div class="card"><div class="kpi-label">Overdue Action Rate</div><div class="kpi-val danger">{{ m.overdue_rate }}%</div></div>
+  <div class="card"><div class="kpi-label">Completed Within Due Date</div><div class="kpi-val">{{ m.on_time_rate }}%</div></div>
+  <div class="card"><div class="kpi-label">Overall Completion Rate</div><div class="kpi-val">{{ m.completion_rate }}%</div></div>
+  <div class="card"><div class="kpi-label">Avg Open Action Age</div><div class="kpi-val">{{ m.avg_action_age }}d</div></div>
+</section>
+
+<div class="card">
+  <h2>Open Workload by Recruiter</h2>
+  <table>
+    <thead><tr><th>Recruiter</th><th>Open Pending Actions</th></tr></thead>
+    <tbody>
+      {% for name, count in m.workload.items() %}
+      <tr><td>{{ name }}</td><td><strong>{{ count }}</strong></td></tr>
+      {% else %}
+      <tr><td colspan="2" class="muted">No open actions match the selected filter.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

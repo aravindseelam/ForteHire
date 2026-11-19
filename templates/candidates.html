@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Candidates · HirePulse{% endblock %}
+{% block content %}
+<h1>Candidates</h1>
+<div class="card" style="padding:0;overflow:hidden;">
+  <table>
+    <thead><tr><th>Name</th><th>Email</th><th>Experience</th><th>Location</th><th>Applications</th><th>Last Activity</th></tr></thead>
+    <tbody>
+      {% for c in candidates %}
+      <tr>
+        <td><a href="/candidates/{{ c.candidate_id }}"><strong>{{ c.name }}</strong></a></td>
+        <td class="muted">{{ c.email }}</td>
+        <td>{{ c.experience }} yrs</td>
+        <td>{{ c.location }}</td>
+        <td>{{ c.app_count }}</td>
+        <td>{{ c.last_activity_at or '—' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
