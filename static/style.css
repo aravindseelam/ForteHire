@@ -39,6 +39,7 @@
 }
 
 * { box-sizing: border-box; }
+html, body { max-width: 100%; overflow-x: hidden; }
 body {
   margin: 0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
@@ -47,6 +48,39 @@ body {
   line-height: 1.45;
   transition: background-color 0.15s ease, color 0.15s ease;
 }
+
+/* Mobile / Tablet Top Header (hidden on laptops) */
+.mobile-header {
+  display: none;
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  background: var(--sidebar-bg);
+  color: #e6edf5;
+  padding: 10px 16px;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.mobile-brand { font-size: 1.1rem; font-weight: 700; }
+.menu-btn, .theme-toggle-mini, .close-btn {
+  background: transparent;
+  border: 1px solid #2b3b4e;
+  color: #e6edf5;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.close-btn { display: none; }
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 950;
+}
+.sidebar-backdrop.open { display: block; }
 
 .layout { display: flex; min-height: 100vh; }
 
@@ -61,13 +95,18 @@ body {
   flex-shrink: 0;
   border-right: 1px solid var(--border);
 }
+.sidebar-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
 .brand { font-size: 1.2rem; font-weight: 700; margin: 0 0 4px 8px; }
 .brand-sub { font-size: 0.75rem; color: #9fb3c8; margin: 0 0 20px 8px; }
 .nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
 .nav a {
   color: #d6e1ec;
   text-decoration: none;
-  padding: 9px 12px;
+  padding: 10px 12px;
   border-radius: 6px;
   font-size: 0.92rem;
 }
@@ -76,7 +115,7 @@ body {
 .theme-toggle {
   margin-top: auto;
   width: 100%;
-  padding: 8px 12px;
+  padding: 9px 12px;
   border-radius: 6px;
   border: 1px solid #2b3b4e;
   background: transparent;
@@ -110,10 +149,11 @@ a { color: var(--brand-accent); }
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 16px;
+  min-width: 0;
 }
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 12px;
   margin-bottom: 18px;
 }
@@ -123,7 +163,7 @@ a { color: var(--brand-accent); }
 
 .grid-2 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
   margin-bottom: 18px;
 }
@@ -135,6 +175,7 @@ a { color: var(--brand-accent); }
   border-radius: 12px;
   font-size: 0.75rem;
   font-weight: 600;
+  white-space: nowrap;
 }
 .badge-High { background: var(--high-bg); color: var(--high-fg); }
 .badge-Medium { background: var(--med-bg); color: var(--med-fg); }
@@ -155,10 +196,14 @@ a { color: var(--brand-accent); }
   font-weight: 600;
 }
 
-/* Tables */
+/* Responsive Tables */
+.card:has(> table), .table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
 table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
-th { font-size: 0.78rem; text-transform: uppercase; color: var(--muted); background: var(--surface-alt); }
+th { font-size: 0.78rem; text-transform: uppercase; color: var(--muted); background: var(--surface-alt); white-space: nowrap; }
 tr.clickable { cursor: pointer; }
 tr.clickable:hover, tr.clickable.selected { background: var(--surface-hover); }
 
@@ -166,7 +211,7 @@ tr.clickable:hover, tr.clickable.selected { background: var(--surface-hover); }
 .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
 .tabs a {
   text-decoration: none;
-  padding: 6px 12px;
+  padding: 7px 12px;
   border-radius: 6px;
   font-size: 0.85rem;
   color: var(--text);
@@ -177,13 +222,13 @@ tr.clickable:hover, tr.clickable.selected { background: var(--surface-hover); }
 
 /* Action Queue Split View */
 .queue-split { display: grid; grid-template-columns: 1fr 360px; gap: 16px; align-items: start; }
-@media (max-width: 960px) { .queue-split { grid-template-columns: 1fr; } }
 .detail-panel { position: sticky; top: 16px; }
 .reason-list { list-style: none; padding: 0; margin: 8px 0 14px; }
 .reason-list li {
   display: flex;
   justify-content: space-between;
-  padding: 5px 8px;
+  gap: 8px;
+  padding: 6px 8px;
   background: var(--surface-subtle);
   border-radius: 4px;
   margin-bottom: 4px;
@@ -201,9 +246,11 @@ tr.clickable:hover, tr.clickable.selected { background: var(--surface-hover); }
 /* Pipeline Kanban */
 .pipeline-board {
   display: grid;
-  grid-template-columns: repeat(6, minmax(195px, 1fr));
+  grid-template-columns: repeat(6, minmax(210px, 1fr));
   gap: 12px;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 8px;
   align-items: start;
 }
 .stage-col {
@@ -229,12 +276,12 @@ tr.clickable:hover, tr.clickable.selected { background: var(--surface-hover); }
   font-size: 0.85rem;
 }
 .pipe-card a { font-weight: 600; color: var(--brand-accent); text-decoration: none; }
-.pipe-card select { width: 100%; margin-top: 8px; padding: 4px 6px; font-size: 0.82rem; }
+.pipe-card select { width: 100%; margin-top: 8px; padding: 6px 8px; font-size: 0.85rem; }
 
 /* Buttons & Forms */
 .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
 button, .btn {
-  padding: 7px 12px;
+  padding: 8px 12px;
   border-radius: 6px;
   border: 1px solid var(--border);
   background: var(--surface-alt);
@@ -247,7 +294,7 @@ button, .btn {
 button.primary, .btn.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
 button.success { background: #067647; color: #fff; border-color: #067647; }
 input, select {
-  padding: 6px 8px;
+  padding: 7px 9px;
   border: 1px solid var(--border);
   border-radius: 5px;
   font-size: 0.85rem;
@@ -255,5 +302,77 @@ input, select {
   color: var(--text);
   color-scheme: light dark;
 }
-.inline-form { display: flex; gap: 8px; flex-wrap: wrap; align-items: end; margin-bottom: 14px; }
-.inline-form label { display: flex; flex-direction: column; font-size: 0.78rem; color: var(--muted); gap: 3px; }
+.inline-form { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; margin-bottom: 14px; }
+.inline-form label { display: flex; flex-direction: column; font-size: 0.78rem; color: var(--muted); gap: 4px; }
+
+/* ==========================================================================
+   TABLET BREAKPOINT (769px – 1024px)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .mobile-header { display: flex; }
+  .close-btn { display: inline-block; }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 250px;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.22s ease;
+  }
+  .sidebar.open { transform: translateX(0); }
+
+  .content { padding: 18px 20px; }
+  .footer { padding: 12px 20px; }
+
+  .kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .grid-2 { grid-template-columns: 1fr; }
+
+  .queue-split { grid-template-columns: 1fr; }
+  .detail-panel { position: static; }
+}
+
+/* ==========================================================================
+   MOBILE BREAKPOINT (<= 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .content { padding: 14px 12px; }
+  .footer { padding: 12px; font-size: 0.75rem; }
+  h1 { font-size: 1.25rem; margin-bottom: 12px; }
+
+  .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .kpi-val { font-size: 1.35rem; }
+  .card { padding: 12px; }
+
+  .priority-bar { flex-direction: column; gap: 8px; }
+  .priority-pill { min-width: 0; padding: 10px 14px; }
+
+  /* Horizontal scroll-snap for filter tabs and Kanban columns */
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+  .tabs a { white-space: nowrap; flex-shrink: 0; }
+
+  .pipeline-board {
+    grid-template-columns: repeat(6, 82vw);
+    scroll-snap-type: x mandatory;
+  }
+  .stage-col { scroll-snap-align: start; min-height: 280px; }
+
+  /* Comfortable touch targets & prevent iOS zoom on focus */
+  button, .btn, input, select {
+    min-height: 40px;
+    font-size: 16px;
+  }
+  .inline-form { flex-direction: column; align-items: stretch; }
+  .inline-form label, .inline-form input, .inline-form select, .inline-form button {
+    width: 100%;
+  }
+
+  th, td { padding: 8px 9px; font-size: 0.84rem; }
+}
