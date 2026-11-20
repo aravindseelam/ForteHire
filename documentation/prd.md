@@ -1,6 +1,6 @@
-# Product Requirements Document (PRD): HirePulse
+# Product Requirements Document (PRD): ForteHire
 
-**Product Name:** HirePulse – Recruitment Intelligence & Workflow Optimisation Platform  
+**Product Name:** ForteHire – Recruitment Intelligence & Workflow Optimisation Platform  
 **Author:** Product Management Portfolio Project  
 **Status:** Draft v1.0 (Phase 1 – Discovery & Specification)  
 **Target Release:** MVP (Single-Recruiter & Small Agency Desk)
@@ -46,15 +46,15 @@ If we give recruiters a unified **Action Queue** that surfaces prioritized, time
 
 ### Out of Scope (Explicit Non-Goals for MVP)
 * **No AI or ML features:** No generative email drafting, no AI-powered prioritization, no automated resume parsing, and no LLM summaries. All prioritization is deterministic (rule-based on due date and stage).
-* **No Candidate Scoring or Ranking:** HirePulse optimizes *recruiter workflow execution*, not candidate evaluation. There are no match percentages, fit scores, or automated candidate ratings.
-* **No Two-Way Email / Calendar / LinkedIn Sync:** Outbound communication happens outside the MVP; HirePulse tracks the workflow action and timestamp.
+* **No Candidate Scoring or Ranking:** ForteHire optimizes *recruiter workflow execution*, not candidate evaluation. There are no match percentages, fit scores, or automated candidate ratings.
+* **No Two-Way Email / Calendar / LinkedIn Sync:** Outbound communication happens outside the MVP; ForteHire tracks the workflow action and timestamp.
 * **No Multi-Tenant Enterprise Permissions or Billing:** MVP supports single-workspace operation with seeded realistic recruitment data.
 
 ---
 
 ## 5. Success Metrics
 
-These three North Star execution metrics define MVP success and are surfaced directly on the **HirePulse Analytics** page:
+These three North Star execution metrics define MVP success and are surfaced directly on the **ForteHire Analytics** page:
 
 | Metric | Definition | Formula | MVP Target |
 | :--- | :--- | :--- | :--- |
@@ -70,7 +70,7 @@ These three North Star execution metrics define MVP success and are surfaced dir
 
 | Risk | Likelihood | Impact | Mitigation |
 | :--- | :---: | :---: | :--- |
-| **Adoption Friction ("Another Tool")** — Recruiters already live in an ATS and resist logging tasks in a separate workspace. | High | High | Keep task creation under 3 clicks, auto-prompt next action on stage change, and design HirePulse as a lightweight workflow layer that could eventually sit atop an ATS API. |
+| **Adoption Friction ("Another Tool")** — Recruiters already live in an ATS and resist logging tasks in a separate workspace. | High | High | Keep task creation under 3 clicks, auto-prompt next action on stage change, and design ForteHire as a lightweight workflow layer that could eventually sit atop an ATS API. |
 | **Snooze Abuse ("Kicking the Can")** — Recruiters repeatedly snooze overdue tasks to artificially lower their Overdue Action Rate. | Medium | Medium | Track `snooze_count` per task, preserve `original_due_at` for the On-Time Completion metric, and visually badge tasks snoozed $\ge 3$ times. |
 | **Metric Anxiety / Surveillance Pushback** — Recruiters perceive execution metrics as micromanagement rather than a personal productivity aid. | Medium | High | Frame the Analytics page as a self-service desk health check for the recruiter first, avoiding individual leaderboard rankings in MVP. |
 | **Unvalidated Gap Hypothesis** — Pain points are sourced from secondary research (forums/docs) and not yet validated with live user interviews. | High | High | Explicitly label research as unvalidated; run 5–8 structured discovery interviews with agency recruiters before investing in Phase 2 integrations. |
