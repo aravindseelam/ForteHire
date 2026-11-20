@@ -1,4 +1,4 @@
-# Product Research & Competitive Gap Analysis: HirePulse
+# Product Research & Competitive Gap Analysis: ForteHire
 
 > **RESEARCH STATUS: UNVALIDATED (Secondary Desk Research Only)**  
 > *All gap hypotheses and user pain points in this document are synthesized from public product documentation and online recruiter communities. They have **not yet been validated** through primary customer discovery interviews or usability testing. Primary validation (5–8 agency recruiter interviews) is required before any post-MVP investment.*
@@ -39,7 +39,7 @@ Recruit CRM excels as a **system of record** (storing candidates, pipelines, and
 * **Siloed Task Visibility:** Because tasks do not sync to external calendars and email reminders often create inbox fatigue (prompting users to turn them off), overdue tasks quietly accumulate.
 * **Lagging vs. Leading Analytics:** Existing analytics emphasize lagging outcomes (placements, submissions) rather than real-time **leading execution metrics**—specifically *Time to Identify Next Action*, *Overdue Action Rate*, and *% of Tasks Completed Within Due Date*.
 
-**HirePulse's Bet:** A focused, deterministic workflow layer that pairs an urgency-grouped Action Queue with inline stage updates and leading execution analytics will meaningfully reduce dropped follow-ups.
+**ForteHire's Bet:** A focused, deterministic workflow layer that pairs an urgency-grouped Action Queue with inline stage updates and leading execution analytics will meaningfully reduce dropped follow-ups.
 
 ---
 
@@ -62,4 +62,4 @@ The following recurring themes were synthesized from recruiter discussions on `r
 
 Before moving beyond the portfolio MVP into production integrations, we will validate this research by:
 1. Conducting **5–8 structured 20-minute interviews** with agency recruiters using Recruit CRM, Bullhorn, or Greenhouse to test whether *triage time* and *overdue follow-ups* are top-3 daily pains.
-2. Running a **clickable prototype test** of the HirePulse Action Queue and measuring actual *Time to Identify Next Action* against their current ATS workflow.
+2. Running a **clickable prototype test** of the ForteHire Action Queue and measuring actual *Time to Identify Next Action* against their current ATS workflow.
