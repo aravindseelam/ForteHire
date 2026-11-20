@@ -1,4 +1,4 @@
-# User Stories: HirePulse
+# User Stories: ForteHire
 
 **Version:** 1.0  
 **Scope:** MVP Workflow & Analytics  
