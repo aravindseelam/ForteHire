@@ -24,12 +24,30 @@ function submitTaskForm(event) {
   act("/tasks", body);
 }
 
+/* Mobile & Tablet Navigation Drawer */
+function toggleSidebar() {
+  const sidebar = document.getElementById("sidebar");
+  const backdrop = document.getElementById("sidebar-backdrop");
+  if (!sidebar) return;
+  const opening = !sidebar.classList.contains("open");
+  sidebar.classList.toggle("open", opening);
+  if (backdrop) backdrop.classList.toggle("open", opening);
+}
+
+function closeSidebar() {
+  const sidebar = document.getElementById("sidebar");
+  const backdrop = document.getElementById("sidebar-backdrop");
+  if (sidebar) sidebar.classList.remove("open");
+  if (backdrop) backdrop.classList.remove("open");
+}
+
 /* Theme toggle & persistence */
 function syncThemeButton() {
-  const btn = document.getElementById("theme-toggle");
-  if (!btn) return;
   const isDark = document.documentElement.getAttribute("data-theme") === "dark";
-  btn.textContent = isDark ? "☀ Light Mode" : "☾ Dark Mode";
+  const btn = document.getElementById("theme-toggle");
+  if (btn) btn.textContent = isDark ? "☀ Light Mode" : "☾ Dark Mode";
+  const miniBtn = document.querySelector(".theme-toggle-mini");
+  if (miniBtn) miniBtn.textContent = isDark ? "☀" : "☾";
 }
 
 function toggleTheme() {
@@ -43,7 +61,7 @@ function toggleTheme() {
 }
 
 /* Action Queue: populate side detail panel on row click */
-function selectQueueRow(rowEl) {
+function selectQueueRow(rowEl, isUserClick = true) {
   document.querySelectorAll("tr.clickable").forEach(r => r.classList.remove("selected"));
   rowEl.classList.add("selected");
 
@@ -69,7 +87,7 @@ function selectQueueRow(rowEl) {
     : `<p class="muted">Completed on ${d.completed_at || "—"}</p>`;
 
   panel.innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
       <span class="badge badge-${d.priority}">${d.priority} (${d.score}/45)</span>
       <a href="/candidates/${d.candidate_id}" class="muted">Open Candidate →</a>
     </div>
@@ -92,10 +110,18 @@ function selectQueueRow(rowEl) {
       </select>
     </label>
   `;
+
+  /* On mobile/tablet, smoothly scroll down to the stacked detail panel when tapped */
+  if (isUserClick && window.innerWidth <= 1024) {
+    const detailAside = panel.closest(".detail-panel");
+    if (detailAside) {
+      detailAside.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   syncThemeButton();
   const firstRow = document.querySelector("tr.clickable");
-  if (firstRow) selectQueueRow(firstRow);
+  if (firstRow) selectQueueRow(firstRow, false);
 });
