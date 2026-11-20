@@ -17,10 +17,23 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
+  <header class="mobile-header">
+    <button type="button" class="menu-btn" aria-label="Open menu" onclick="toggleSidebar()">☰ Menu</button>
+    <span class="mobile-brand">ForteHire</span>
+    <button type="button" class="theme-toggle-mini" aria-label="Toggle theme" onclick="toggleTheme()">☾</button>
+  </header>
+
+  <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
+
   <div class="layout">
-    <aside class="sidebar">
-      <div class="brand">ForteHire</div>
-      <div class="brand-sub">Workflow Optimisation</div>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-top">
+        <div>
+          <div class="brand">ForteHire</div>
+          <div class="brand-sub">Workflow Optimisation</div>
+        </div>
+        <button type="button" class="close-btn" aria-label="Close menu" onclick="closeSidebar()">✕</button>
+      </div>
       <nav class="nav">
         <a href="/" class="{{ 'active' if request.path == '/' }}">Dashboard</a>
         <a href="/queue" class="{{ 'active' if request.path.startswith('/queue') }}">Action Queue</a>
