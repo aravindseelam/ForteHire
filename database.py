@@ -1,7 +1,7 @@
 import os
 import sqlite3
 
-DB = os.path.join("database", "hirepulse.db")
+DB = os.path.join("database", "fortehire.db")
 
 def get_db():
     conn = sqlite3.connect(DB)
