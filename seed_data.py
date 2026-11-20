@@ -13,9 +13,9 @@ def iso(offset_days: int) -> str:
 
 
 RECRUITERS = [
-    (1, "Ananya Iyer", "ananya@hirepulse.demo", "Senior Recruiter"),
-    (2, "Rohan Mehta", "rohan@hirepulse.demo", "Technical Recruiter"),
-    (3, "Priya Nair", "priya@hirepulse.demo", "Recruiter"),
+    (1, "Ananya Iyer", "ananya@fortehire.demo", "Senior Recruiter"),
+    (2, "Rohan Mehta", "rohan@fortehire.demo", "Technical Recruiter"),
+    (3, "Priya Nair", "priya@fortehire.demo", "Recruiter"),
 ]
 
 JOBS = [
@@ -268,7 +268,7 @@ def seed():
 
     conn.commit()
     conn.close()
-    print(f"Seeded HirePulse DB (ref date: {TODAY.isoformat()}) — Rahul score: {rahul_score}/45")
+    print(f"Seeded ForteHire DB (ref date: {TODAY.isoformat()}) — Rahul score: {rahul_score}/45")
 
 
 if __name__ == "__main__":
