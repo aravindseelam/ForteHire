@@ -1,4 +1,4 @@
-# Test Cases: HirePulse MVP
+# Test Cases: ForteHire MVP
 
 **Version:** 1.0  
 **Test Environment:** Local / Staging Web App  
