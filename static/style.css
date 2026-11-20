@@ -1,14 +1,41 @@
 :root {
   --bg: #f6f7f9;
   --surface: #ffffff;
+  --surface-alt: #fafbfc;
+  --surface-hover: #eef4fa;
+  --surface-subtle: #f8f9fb;
+  --kanban-col: #eef1f5;
   --border: #e2e6ec;
   --text: #1b2430;
   --muted: #5c6773;
   --brand: #1f4e79;
-  --high-bg: #fdecec;   --high-fg: #b42318;
-  --med-bg: #fef4e6;    --med-fg: #b54708;
-  --low-bg: #ecfdf3;    --low-fg: #067647;
+  --brand-accent: #1f4e79;
+  --sidebar-bg: #132030;
+  --sidebar-hover: #22364d;
+  --high-bg: #fdecec;    --high-fg: #b42318;
+  --med-bg: #fef4e6;     --med-fg: #b54708;
+  --low-bg: #ecfdf3;     --low-fg: #067647;
   --neutral-bg: #f1f3f5; --neutral-fg: #495057;
+}
+
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface-alt: #1c222b;
+  --surface-hover: #1f2d3d;
+  --surface-subtle: #1c222b;
+  --kanban-col: #131820;
+  --border: #30363d;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --brand: #2f6fad;
+  --brand-accent: #58a6ff;
+  --sidebar-bg: #090d13;
+  --sidebar-hover: #1c2633;
+  --high-bg: #3d1618;    --high-fg: #ff8b85;
+  --med-bg: #3b260c;     --med-fg: #f5b041;
+  --low-bg: #103322;     --low-fg: #56d38c;
+  --neutral-bg: #262c36; --neutral-fg: #c9d1d9;
 }
 
 * { box-sizing: border-box; }
@@ -18,6 +45,7 @@ body {
   color: var(--text);
   background: var(--bg);
   line-height: 1.45;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .layout { display: flex; min-height: 100vh; }
@@ -25,16 +53,17 @@ body {
 /* Sidebar */
 .sidebar {
   width: 220px;
-  background: #132030;
+  background: var(--sidebar-bg);
   color: #e6edf5;
   display: flex;
   flex-direction: column;
   padding: 20px 14px;
   flex-shrink: 0;
+  border-right: 1px solid var(--border);
 }
 .brand { font-size: 1.2rem; font-weight: 700; margin: 0 0 4px 8px; }
 .brand-sub { font-size: 0.75rem; color: #9fb3c8; margin: 0 0 20px 8px; }
-.nav { display: flex; flex-direction: column; gap: 4px; }
+.nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
 .nav a {
   color: #d6e1ec;
   text-decoration: none;
@@ -42,7 +71,22 @@ body {
   border-radius: 6px;
   font-size: 0.92rem;
 }
-.nav a:hover, .nav a.active { background: #22364d; color: #fff; font-weight: 600; }
+.nav a:hover, .nav a.active { background: var(--sidebar-hover); color: #fff; font-weight: 600; }
+
+.theme-toggle {
+  margin-top: auto;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #2b3b4e;
+  background: transparent;
+  color: #d6e1ec;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+}
+.theme-toggle:hover { background: var(--sidebar-hover); color: #fff; }
 
 /* Main column */
 .main-wrap { flex: 1; display: flex; flex-direction: column; min-width: 0; }
@@ -58,6 +102,7 @@ body {
 h1 { margin: 0 0 16px; font-size: 1.45rem; }
 h2 { margin: 0 0 12px; font-size: 1.05rem; }
 .muted { color: var(--muted); font-size: 0.85rem; }
+a { color: var(--brand-accent); }
 
 /* Cards & Grids */
 .card {
@@ -74,7 +119,7 @@ h2 { margin: 0 0 12px; font-size: 1.05rem; }
 }
 .kpi-label { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; }
 .kpi-val { font-size: 1.65rem; font-weight: 700; margin-top: 4px; }
-.kpi-val.danger { color: var(--high-fg); }
+.kpi-val.danger, .danger { color: var(--high-fg); }
 
 .grid-2 {
   display: grid;
@@ -113,9 +158,9 @@ h2 { margin: 0 0 12px; font-size: 1.05rem; }
 /* Tables */
 table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
-th { font-size: 0.78rem; text-transform: uppercase; color: var(--muted); background: #fafbfc; }
+th { font-size: 0.78rem; text-transform: uppercase; color: var(--muted); background: var(--surface-alt); }
 tr.clickable { cursor: pointer; }
-tr.clickable:hover, tr.clickable.selected { background: #eef4fa; }
+tr.clickable:hover, tr.clickable.selected { background: var(--surface-hover); }
 
 /* Filter tabs */
 .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
@@ -139,7 +184,7 @@ tr.clickable:hover, tr.clickable.selected { background: #eef4fa; }
   display: flex;
   justify-content: space-between;
   padding: 5px 8px;
-  background: #f8f9fb;
+  background: var(--surface-subtle);
   border-radius: 4px;
   margin-bottom: 4px;
   font-size: 0.85rem;
@@ -147,8 +192,8 @@ tr.clickable:hover, tr.clickable.selected { background: #eef4fa; }
 .guardrail {
   margin-top: 16px;
   padding: 8px 10px;
-  background: #f4f6f8;
-  border-left: 3px solid var(--brand);
+  background: var(--surface-subtle);
+  border-left: 3px solid var(--brand-accent);
   font-size: 0.78rem;
   color: var(--muted);
 }
@@ -162,7 +207,8 @@ tr.clickable:hover, tr.clickable.selected { background: #eef4fa; }
   align-items: start;
 }
 .stage-col {
-  background: #eef1f5;
+  background: var(--kanban-col);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 10px;
   min-height: 360px;
@@ -182,7 +228,7 @@ tr.clickable:hover, tr.clickable.selected { background: #eef4fa; }
   margin-bottom: 8px;
   font-size: 0.85rem;
 }
-.pipe-card a { font-weight: 600; color: var(--brand); text-decoration: none; }
+.pipe-card a { font-weight: 600; color: var(--brand-accent); text-decoration: none; }
 .pipe-card select { width: 100%; margin-top: 8px; padding: 4px 6px; font-size: 0.82rem; }
 
 /* Buttons & Forms */
@@ -191,20 +237,23 @@ button, .btn {
   padding: 7px 12px;
   border-radius: 6px;
   border: 1px solid var(--border);
-  background: var(--surface);
+  background: var(--surface-alt);
   cursor: pointer;
   font-size: 0.85rem;
   font-weight: 600;
   text-decoration: none;
   color: var(--text);
 }
-button.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+button.primary, .btn.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
 button.success { background: #067647; color: #fff; border-color: #067647; }
 input, select {
   padding: 6px 8px;
   border: 1px solid var(--border);
   border-radius: 5px;
   font-size: 0.85rem;
+  background: var(--surface);
+  color: var(--text);
+  color-scheme: light dark;
 }
 .inline-form { display: flex; gap: 8px; flex-wrap: wrap; align-items: end; margin-bottom: 14px; }
 .inline-form label { display: flex; flex-direction: column; font-size: 0.78rem; color: var(--muted); gap: 3px; }
