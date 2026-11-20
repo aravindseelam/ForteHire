@@ -1,4 +1,4 @@
-# Acceptance Criteria: HirePulse
+# Acceptance Criteria: ForteHire
 
 **Version:** 1.0  
 **Format:** Behavior-Driven Development (`Given / When / Then`)  
@@ -8,7 +8,7 @@
 ## US-01: Daily Action Triage (Prioritized Queue)
 
 * **AC-01.1 (Default Grouping & Ordering)**  
-  **Given** I am logged into HirePulse with open tasks across past, current, and future dates,  
+  **Given** I am logged into ForteHire with open tasks across past, current, and future dates,  
   **When** I navigate to the Action Queue,  
   **Then** tasks are grouped in order: **Overdue**, **Due Today**, and **Upcoming**, and sorted chronologically by due date (oldest overdue first).
 
