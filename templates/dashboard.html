@@ -66,29 +66,71 @@
 {% block scripts %}
 <script>
   const actData = {{ activity_7d | tojson }};
-  new Chart(document.getElementById("activityChart"), {
+  const stageLabels = {{ stages | tojson }};
+  const stageCounts = {{ stage_counts | tojson }};
+
+  function chartColors() {
+    const dark = document.documentElement.getAttribute("data-theme") === "dark";
+    return {
+      text: dark ? "#c9d1d9" : "#5c6773",
+      grid: dark ? "#30363d" : "#e2e6ec",
+      created: dark ? "#48566a" : "#9fb3c8",
+      completed: dark ? "#58a6ff" : "#1f4e79",
+      pipeline: dark ? "#388bfd" : "#336699"
+    };
+  }
+
+  let c = chartColors();
+
+  const activityChart = new Chart(document.getElementById("activityChart"), {
     type: "bar",
     data: {
       labels: actData.labels,
       datasets: [
-        { label: "Created", data: actData.created, backgroundColor: "#9fb3c8" },
-        { label: "Completed", data: actData.completed, backgroundColor: "#1f4e79" }
+        { label: "Created", data: actData.created, backgroundColor: c.created },
+        { label: "Completed", data: actData.completed, backgroundColor: c.completed }
       ]
     },
-    options: { responsive: true, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+    options: {
+      responsive: true,
+      plugins: { legend: { labels: { color: c.text } } },
+      scales: {
+        x: { ticks: { color: c.text }, grid: { color: c.grid } },
+        y: { beginAtZero: true, ticks: { stepSize: 1, color: c.text }, grid: { color: c.grid } }
+      }
+    }
   });
 
-  new Chart(document.getElementById("pipelineChart"), {
+  const pipelineChart = new Chart(document.getElementById("pipelineChart"), {
     type: "bar",
     data: {
-      labels: {{ stages | tojson }},
-      datasets: [{
-        label: "Applications",
-        data: {{ stage_counts | tojson }},
-        backgroundColor: "#336699"
-      }]
+      labels: stageLabels,
+      datasets: [{ label: "Applications", data: stageCounts, backgroundColor: c.pipeline }]
     },
-    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: c.text }, grid: { color: c.grid } },
+        y: { beginAtZero: true, ticks: { stepSize: 1, color: c.text }, grid: { color: c.grid } }
+      }
+    }
+  });
+
+  window.addEventListener("themechange", () => {
+    const next = chartColors();
+    activityChart.data.datasets[0].backgroundColor = next.created;
+    activityChart.data.datasets[1].backgroundColor = next.completed;
+    activityChart.options.plugins.legend.labels.color = next.text;
+    [activityChart, pipelineChart].forEach(ch => {
+      ch.options.scales.x.ticks.color = next.text;
+      ch.options.scales.x.grid.color = next.grid;
+      ch.options.scales.y.ticks.color = next.text;
+      ch.options.scales.y.grid.color = next.grid;
+    });
+    pipelineChart.data.datasets[0].backgroundColor = next.pipeline;
+    activityChart.update();
+    pipelineChart.update();
   });
 </script>
 {% endblock %}
