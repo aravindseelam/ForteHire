@@ -4,6 +4,15 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{% block title %}ForteHire{% endblock %}</title>
+  <script>
+    (function () {
+      const saved = localStorage.getItem("fortehire-theme");
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      if (saved === "dark" || (!saved && prefersDark)) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    })();
+  </script>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
@@ -20,6 +29,9 @@
         <a href="/jobs" class="{{ 'active' if request.path.startswith('/jobs') }}">Jobs</a>
         <a href="/analytics" class="{{ 'active' if request.path.startswith('/analytics') }}">Analytics</a>
       </nav>
+      <button type="button" id="theme-toggle" class="theme-toggle" onclick="toggleTheme()">
+        Dark Mode
+      </button>
     </aside>
 
     <div class="main-wrap">
